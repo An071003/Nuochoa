@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
     <div className="bg-white shadow-md rounded-lg overflow-hidden hover:scale-105 transform transition duration-300" onClick={handleClick}>
       {/* Hình ảnh sản phẩm */}
       <img
-        src={product.image}
+        src={product.images[0]}
         alt={product.name}
         className="w-full h-64 object-cover"
       />
