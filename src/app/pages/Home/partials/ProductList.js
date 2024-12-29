@@ -8,6 +8,7 @@ const products = [
     price: "590.000 VND",
     oldPrice: "650.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "L'Ombre EDP là một dòng nước hoa sang trọng, mang đến sự quyến rũ."
   },
   {
     id: 2,
@@ -15,6 +16,7 @@ const products = [
     price: "440.000 VND",
     oldPrice: "590.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "Ilio EDT mang đến hương thơm tươi mát, thích hợp cho mùa hè."
   },
   {
     id: 3,
@@ -22,6 +24,7 @@ const products = [
     price: "590.000 VND",
     oldPrice: "650.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "Eau Capital EDP mang đến một hương thơm thanh lịch, phù hợp với môi trường công sở."
   },
   {
     id: 4,
@@ -29,6 +32,7 @@ const products = [
     price: "590.000 VND",
     oldPrice: "650.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "Fleur De Peau EDP có hương hoa nhẹ nhàng, dễ chịu, thích hợp cho các buổi hẹn hò."
   },
   {
     id: 5,
@@ -36,6 +40,7 @@ const products = [
     price: "590.000 VND",
     oldPrice: "650.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "Orpheon EDP mang đến một trải nghiệm hương thơm sâu sắc, quyến rũ."
   },
   {
     id: 6,
@@ -43,6 +48,7 @@ const products = [
     price: "400.000 VND",
     oldPrice: "340.000 VND",
     image: "https://via.placeholder.com/200x300",
+    description: "Pradadoxe mang đến một hương thơm tinh tế và đầy lôi cuốn."
   },
 ];
 
