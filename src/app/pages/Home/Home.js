@@ -3,6 +3,7 @@ import { sCount } from "./homeStore";
 import Carousel from "./partials/Carousel";
 import ProductList from "./partials/ProductList";
 import Brand from "./partials/Brand";
+import Video from "./partials/Video";
 
 export default function Home() {
 
@@ -12,7 +13,8 @@ export default function Home() {
       <div className="w-full h-full min-h-96 pb-24 bg-white py-0">
         <Carousel />
         <Brand />
-        <ProductList />
+        <Video/>
+        <ProductList/>
       </div>
     </div>
   );

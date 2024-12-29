@@ -17,10 +17,6 @@ export default function ProductCard({ product }) {
           <span className="text-red-600 font-bold">{product.price}</span>
           <span className="text-gray-500 line-through">{product.oldPrice}</span>
         </div>
-        {/* Nút mua */}
-        <button className="mt-4 w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition">
-          Thêm vào giỏ hàng
-        </button>
       </div>
     </div>
   );
