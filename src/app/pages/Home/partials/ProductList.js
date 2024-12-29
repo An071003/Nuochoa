@@ -7,7 +7,11 @@ const products = [
     name: "L'Ombre EDP",
     price: "590.000 VND",
     oldPrice: "650.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://maisonduparfumstore.com/cdn/shop/files/ParfumsDeMarlyDelinaEDP.jpg?v=1728036691&width=600",
+      "https://maisonduparfumstore.com/cdn/shop/files/1_2.jpg?v=1734978371&width=600",
+      "https://via.placeholder.com/200x300"
+    ],
     description: "L'Ombre EDP là một dòng nước hoa sang trọng, mang đến sự quyến rũ."
   },
   {
@@ -15,7 +19,10 @@ const products = [
     name: "Ilio EDT",
     price: "440.000 VND",
     oldPrice: "590.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://via.placeholder.com/200x300",
+      "https://via.placeholder.com/200x300"
+    ],
     description: "Ilio EDT mang đến hương thơm tươi mát, thích hợp cho mùa hè."
   },
   {
@@ -23,7 +30,9 @@ const products = [
     name: "Eau Capital EDP",
     price: "590.000 VND",
     oldPrice: "650.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://via.placeholder.com/200x300"
+    ],
     description: "Eau Capital EDP mang đến một hương thơm thanh lịch, phù hợp với môi trường công sở."
   },
   {
@@ -31,7 +40,9 @@ const products = [
     name: "Fleur De Peau EDP",
     price: "590.000 VND",
     oldPrice: "650.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://via.placeholder.com/200x300"
+    ],
     description: "Fleur De Peau EDP có hương hoa nhẹ nhàng, dễ chịu, thích hợp cho các buổi hẹn hò."
   },
   {
@@ -39,7 +50,9 @@ const products = [
     name: "Orpheon EDP",
     price: "590.000 VND",
     oldPrice: "650.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://via.placeholder.com/200x300"
+    ],
     description: "Orpheon EDP mang đến một trải nghiệm hương thơm sâu sắc, quyến rũ."
   },
   {
@@ -47,7 +60,9 @@ const products = [
     name: "Pradadoxe",
     price: "400.000 VND",
     oldPrice: "340.000 VND",
-    image: "https://via.placeholder.com/200x300",
+    images: [
+      "https://via.placeholder.com/200x300"
+    ],
     description: "Pradadoxe mang đến một hương thơm tinh tế và đầy lôi cuốn."
   },
 ];

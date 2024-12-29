@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CiUser, CiShoppingBasket, CiSearch } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 function Header() {
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -42,14 +43,14 @@ function Header() {
               </div>
 
               {/* Logo và Tên thương hiệu */}
-              <div className="text-center">
+              <Link target="_top" to={"/"} className="flex text-center items-center gap-2">
                 <img
                   src="https://via.placeholder.com/100x50"
                   alt="Maison Du Parfum"
                   className="mx-auto mb-2"
                 />
                 <span className="text-lg font-bold">MAISON DU PARFUM</span>
-              </div>
+              </Link>
 
               {/* Nút User và Shopping */}
               <div className="flex items-center mr-[10%] space-x-4">
