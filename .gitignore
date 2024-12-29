@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/UsersADMINAppDataRoamingnpm-cache
 
 # testing
 /coverage
