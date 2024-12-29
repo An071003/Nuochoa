@@ -2,7 +2,7 @@ import React from "react";
 
 function Header() {
   return (
-    <header className="bg-[#4c0e0e] text-white py-4 sticky top-0">
+    <header className="bg-[#4c0e0e] text-white py-4 sticky top-0 z-10">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <button className="text-white text-xl">
@@ -26,9 +26,6 @@ function Header() {
             <button className="text-white text-xl">
               <i className="fas fa-shopping-bag"></i>
             </button>
-            <span className="absolute top-0 right-0 bg-red-500 text-xs rounded-full w-4 h-4 flex items-center justify-center">
-              1
-            </span>
           </div>
         </div>
       </div>
@@ -46,4 +43,5 @@ function Header() {
     </header>
   );
 }
+
 export default Header;

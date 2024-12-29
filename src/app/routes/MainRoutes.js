@@ -15,7 +15,6 @@ export default function MainRoutes() {
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-      <Footer />
     </BrowserRouter>
   );
 }
