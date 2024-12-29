@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../../assets/img/404.svg"
+import img from "../../assets/image/404.svg"
 import BackButton from "../../components/BackButton";
 
 export default function PageNotFound() {
