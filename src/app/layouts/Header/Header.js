@@ -57,9 +57,9 @@ function Header() {
                 <button className="text-white text-xl transition-transform transform hover:scale-125">
                   <CiUser className="w-6 h-6" />
                 </button>
-                <button className="text-white text-xl transition-transform transform hover:scale-125">
+                <Link to="/cart" className="text-white text-xl transition-transform transform hover:scale-125">
                   <CiShoppingBasket className="w-6 h-6" />
-                </button>
+                </Link>
               </div>
             </div>
           )}
@@ -74,7 +74,7 @@ function Header() {
                   className="w-full px-4 py-3 bg-transparent text-white border border-white rounded-full focus:outline-none placeholder-white text-lg"
                 />
                 <button
-                  className="absolute top-0 right-0 mt-[10px] mr-[10px] text-white text-xl"
+                  className="absolute top-0 mt-[10px] ml-[30px] hover:scale-125 text-white text-xl"
                   onClick={closeSearch}
                 >
                   X
