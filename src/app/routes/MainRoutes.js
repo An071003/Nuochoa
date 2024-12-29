@@ -12,6 +12,7 @@ export default function MainRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
