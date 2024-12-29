@@ -10,8 +10,8 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Home {count}</h1>
-      <button onClick={handleClick}>Up</button>
+      <h1 className="font-sans text-3xl min-h-[600px]">Home {count}</h1>
+      
     </div>
   );
 }
