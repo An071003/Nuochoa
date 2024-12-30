@@ -4,7 +4,7 @@ import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#4A1A1A] text-white text-center py-6">
+    <footer className="bg-[#283149] text-white text-center py-6">
       <div className="flex justify-center space-x-4 mb-4">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faFacebookF} className="text-lg hover:text-gray-300" />
