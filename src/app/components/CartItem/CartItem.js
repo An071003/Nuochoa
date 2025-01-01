@@ -41,7 +41,7 @@ export default function CartItem({ product, onIncrease, onDecrease, onRemove }) 
                     </button>
                 </div>
             </td>
-            <td className="p-3 max-w-20 min-w-[80px] text-right">{(product.price * product.quantity).toLocaleString()}₫</td>
+            <td className="p-3 max-w-20 min-w-[80px] text-center">{(product.price * product.quantity).toLocaleString()}₫</td>
             <td className="p-3">
                 <button
                     className="text-red-500 hover:underline"
