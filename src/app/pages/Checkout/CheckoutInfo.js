@@ -70,7 +70,7 @@ export default function CheckoutInfo() {
     };
 
     return (
-        <div className="container mx-auto p-8 flex flex-col lg:flex-row lg:space-x-4">
+        <div className="container mx-auto p-14 flex flex-col lg:flex-row lg:space-x-4">
             <div className="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-6">
                 <div className="flex justify-center mb-6">
                     <Breadcrumb steps={steps} currentStep={2} />

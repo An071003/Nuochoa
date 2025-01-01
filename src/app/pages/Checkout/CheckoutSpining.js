@@ -59,15 +59,14 @@ export default function CheckoutSpinning() {
 
 
   return (
-    <div className="container mx-auto p-8 flex flex-col lg:flex-row lg:space-x-4">
+    <div className="container mx-auto p-14 flex flex-col lg:flex-row lg:space-x-4">
       {/* Phần thông tin chính */}
       <div className="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-6">
-        <div className="mb-6 flex justify-center">
-          {/* Đặt currentStep là 3 để tô màu đúng bước "Vận chuyển" */}
+        <div className="flex justify-center mb-12">
           <Breadcrumb steps={steps} currentStep={3} />
         </div>
         {/* Thông tin liên hệ và địa chỉ giao hàng */}
-        <table className="min-w-full table-auto text-sm my-5 border-collapse">
+        <table className="min-w-full table-auto text-sm my-5 border-collapse mb-6">
           <tbody>
             <tr className="border border-gray-300">
               <td className="font-sans font-bold py-2 px-4 text-gray-700 w-1/4 text-left">
