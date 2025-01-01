@@ -65,6 +65,10 @@ export default function CheckoutInfo() {
         { index: 4, label: "Thanh toán", path: null },
     ];
 
+    const handleBackToCart = () => {
+        navigate("/cart");
+    };
+
     return (
         <div className="container mx-auto p-8 flex flex-col lg:flex-row lg:space-x-4">
             <div className="w-full lg:w-2/3 bg-white shadow-md rounded-lg p-6">
@@ -222,13 +226,23 @@ export default function CheckoutInfo() {
                         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                     </div>
                 </div>
-                <div className="mt-6 text-right">
-                    <button
-                        onClick={handleNextStep}
-                        className="px-6 py-2 bg-blue-500 text-white rounded-md"
-                    >
-                        Chuyển đến phần vận chuyển
-                    </button>
+                <div className="flex justify-between">
+                    <div className="pt-1 text-left">
+                        <button
+                            className="btn btn-secondary px-6 py-2 text-gray-800 rounded-md hover:underline hover:text-red-600 transition"
+                            onClick={handleBackToCart}
+                        >
+                            Quay trở về giỏ hàng
+                        </button>
+                    </div>
+                    <div className="text-right">
+                        <button
+                            onClick={handleNextStep}
+                            className="px-6 py-2 bg-blue-500 text-white rounded-md"
+                        >
+                            Chuyển đến phần vận chuyển
+                        </button>
+                    </div>
                 </div>
             </div>
             <CheckoutSummary cartItems={cartItems} shippingCost={0} total={total} />

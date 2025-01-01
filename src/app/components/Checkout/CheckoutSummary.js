@@ -29,15 +29,22 @@ export default function CheckoutSummary({ cartItems, shippingCost, total }) {
         ))}
       </ul>
 
-      <div className="mt-4">
-        <p className="text-lg font-bold">Tổng phụ: {total.toLocaleString()}₫</p>
-        <p className="text-lg font-bold">
-          Tiền vận chuyển: {shippingCost.toLocaleString()}₫
-        </p>
-        <p className="text-xl font-bold mt-4">
-          Tổng cộng: {totalWithShipping.toLocaleString()}₫
-        </p>
-      </div>
+      <table className="w-full mt-6">
+        <tbody>
+          <tr>
+            <td className=" text-lg font-bold">Tổng phụ:</td>
+            <td className="text-right text-lg font-bold">{total.toLocaleString()}₫</td>
+          </tr>
+          <tr>
+            <td className="text-lg font-bold">Tiền vận chuyển:</td>
+            <td className="text-right text-lg font-bold">{shippingCost.toLocaleString()}₫</td>
+          </tr>
+          <tr>
+            <td className="pt-4 text-xl font-bold mt-4">Tổng cộng:</td>
+            <td className="pt-4 text-right text-xl font-bold mt-4">{totalWithShipping.toLocaleString()}₫</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
