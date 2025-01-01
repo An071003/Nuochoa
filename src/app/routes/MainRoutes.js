@@ -12,6 +12,7 @@ import Cart from "../pages/Cart/Cart";
 import VerifyCode from "../components/VerifyCode";
 import Login from "../components/Login";
 import ConfirmPopup from "../components/confirmpopup";
+import CheckoutPayment from "../pages/Checkout/CheckoutPayment";
 
 export default function MainRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function MainRoutes() {
         <Route path="/confirm" element={<ConfirmPopup />} />
         <Route path="/checkout/info" element={<CheckoutInfo />} />
         <Route path="/checkout/spinning" element={<CheckoutSpining />} />
+        <Route path="/checkout/payment" element={<CheckoutPayment />} />
         {/* Add more routes if necessary for payment */}
         {/* <Route path="/checkout/payment" element={<CheckoutPayment />} /> */}
 
