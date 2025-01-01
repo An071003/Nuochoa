@@ -11,6 +11,7 @@ import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart/Cart";
 import VerifyCode from "../components/VerifyCode";
 import Login from "../components/Login";
+import ConfirmPopup from "../components/confirmpopup";
 
 export default function MainRoutes() {
   return (
@@ -24,7 +25,7 @@ export default function MainRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/verify-code" element={<VerifyCode />} />
 
-        {/* Checkout routes */}
+        <Route path="/confirm" element={<ConfirmPopup />} />
         <Route path="/checkout/info" element={<CheckoutInfo />} />
         <Route path="/checkout/spinning" element={<CheckoutSpining />} />
         {/* Add more routes if necessary for payment */}
