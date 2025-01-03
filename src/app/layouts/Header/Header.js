@@ -1,19 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiUser, CiSearch, CiShoppingBasket } from "react-icons/ci";
-import Logo from "../../assets/image/resized_image_5_3.png"
+import Logo from "../../assets/image/resized_image_5_3.png";
 
 function Header() {
+  const navigate = useNavigate();
+
+  // User mẫu
+  const user = {
+    username: "johndoe",
+    firstname: "John",
+    lastname: "Doe",
+    email: "johndoe@example.com",
+    hashPassword: "12345hashedpassword",
+    avatar: "https://via.placeholder.com/150"
+  };
+
+  const isLoggedIn = true; // Thay bằng trạng thái thực tế của ứng dụng bạn
+
+  const handleUserClick = () => {
+    if (isLoggedIn) {
+      navigate("/user", { state: { user } });
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <header className="bg-[#FFF6E3] text-[#283149] sticky top-0 z-50">
       <div className="container mx-auto flex justify-center gap-40 items-center">
         {/* Logo */}
         <Link to="/" target="_top" className="flex items-center">
-          <img
-            src={Logo}
-            alt="Logo"
-            className="max-h-[100px] object-contain"
-          />
+          <img src={Logo} alt="Logo" className="max-h-[100px] object-contain" />
         </Link>
 
         <div className="relative w-[600px]">
@@ -38,19 +56,24 @@ function Header() {
             <span className="hover:underline cursor-pointer">Về Maison</span>
           </div>
         </div>
-        
+
         {/* Nút user và giỏ hàng */}
         <div className="flex items-center space-x-4">
-          <Link className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80">
+          <button
+            onClick={handleUserClick}
+            className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80"
+          >
             <CiUser className="w-5 h-5" />
-          </Link>
-          <Link to="/Cart" className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80 flex items-center">
+          </button>
+          <Link
+            to="/cart"
+            className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80 flex items-center"
+          >
             <CiShoppingBasket className="w-5 h-5" />
             <span className="ml-2 text-sm font-medium">Giỏ hàng</span>
           </Link>
         </div>
       </div>
-
     </header>
   );
 }
