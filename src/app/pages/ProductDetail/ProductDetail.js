@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Cookies from "js-cookie";
 import { message } from "antd";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function ProductDetail() {
   const { id } = useParams(); // Lấy ID sản phẩm từ URL
