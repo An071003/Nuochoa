@@ -67,8 +67,16 @@ const MainRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/confirm" element={<ConfirmPopup />} />
+<<<<<<< HEAD
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+=======
+        <Route path="/checkout/info" element={<CheckoutInfo />} />
+        <Route path="/checkout/spinning" element={<CheckoutSpining />} />
+        <Route path="/checkout/payment" element={<CheckoutPayment />} />
+        {/* Add more routes if necessary for payment */}
+        {/* <Route path="/checkout/payment" element={<CheckoutPayment />} /> */}
+>>>>>>> ff77f551c2f9645cb9d89b9a9765562f4ebcf0a5
 
         {/* Các route cần bảo vệ */}
         <Route element={<UserLayout />}>
