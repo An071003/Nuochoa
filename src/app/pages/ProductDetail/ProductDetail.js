@@ -14,7 +14,13 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/products/${id}`);
+        const response = await fetch(`http://localhost:5001/api/products/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch product details");
         }
@@ -50,7 +56,11 @@ export default function ProductDetail() {
 
       const response = await fetch("http://localhost:5001/api/cart", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ productId: id }),
+        credentials: "include",
       });
 
       if (!response.ok) {

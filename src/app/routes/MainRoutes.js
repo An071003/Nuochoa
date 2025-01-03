@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
 // Các component
 import Home from "../pages/Home";
@@ -21,16 +21,17 @@ import ResetPassword from "../components/ResetPassword";
 // Component PrivateRoute để kiểm tra xác thực
 const PrivateRoute = ({ element }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate(); // Khởi tạo hook useNavigate
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/auth/verify-token`, {
+        const response = await fetch(`${API_URL}/api/auth/protectRoute`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Đảm bảo cookie được gửi theo yêu cầu
+          credentials: "include", // Đảm bảo gửi cookies (token)
         });
 
         if (response.ok) {
@@ -48,13 +49,15 @@ const PrivateRoute = ({ element }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Có thể thay bằng loading spinner
+    return <div>Loading...</div>; // Chờ cho quá trình xác thực hoàn tất
   }
 
   if (isAuthenticated) {
-    return element; // Nếu đã xác thực, render component cần thiết
+    return element; // Render component nếu xác thực thành công
   } else {
-    return <Navigate to="/login" />; // Nếu chưa xác thực, chuyển hướng về /login
+    // Nếu chưa xác thực, chuyển hướng đến login
+    navigate("/login", { replace: true }); 
+    return null; // Không render gì khi đang chuyển hướng
   }
 };
 
