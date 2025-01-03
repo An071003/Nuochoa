@@ -107,7 +107,7 @@ export default function ProductDetail() {
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
-                </div>
+                </div>  
               ))}
             </div>
           </div>
