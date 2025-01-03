@@ -18,7 +18,6 @@ export default function CheckoutPayment() {
     postalCode: "",
     phone: "",
   };
-
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [formData, setFormData] = useState(initialFormData);
   const [shippingCost, setShippingCost] = useState(0);
