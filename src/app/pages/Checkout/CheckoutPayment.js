@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import CheckoutSummary from "./CheckoutSummary"; // Import CheckoutSummary
 import Breadcrumb from "./partials/Breadcrumb";
 
-export default function CheckoutSpinning() {
+export default function CheckoutPayment() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,7 +29,7 @@ export default function CheckoutSpinning() {
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [cartItems, formData]);
 
-  // Hàm thay đổi phí vận chuyển
+  // Hàm thay đổi phí Thanh toán
   const handleShippingChange = (cost) => {
     setShippingCost(cost);
   };
@@ -53,8 +53,7 @@ export default function CheckoutSpinning() {
   const steps = [
     { index: 1, label: "Giỏ hàng", path: "/cart" },
     { index: 2, label: "Thông tin", path: "/checkout/info" },
-    { index: 3, label: "Vận chuyển", path: "/checkout/spinning" },
-    { index: 4, label: "Thanh toán", path: null },
+    { index: 3, label: "Thanh toán", path: "/checkout/Payment" },
   ];
 
 
@@ -84,7 +83,7 @@ export default function CheckoutSpinning() {
             </tr>
             <tr className="border border-gray-300">
               <td className="font-sans font-bold py-2 px-4 text-gray-700 w-1/4 text-left">
-                Vận chuyển đến:
+                Thanh toán đến:
               </td>
               <td className="py-2 px-4 text-gray-800 text-left">
                 {formData.address}, {formData.city}
@@ -101,8 +100,8 @@ export default function CheckoutSpinning() {
           </tbody>
         </table>
 
-        {/* Lựa chọn phương thức vận chuyển */}
-        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Vận chuyển</h1>
+        {/* Lựa chọn phương thức Thanh toán */}
+        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Thanh toán</h1>
         <table className="min-w-full table-auto text-sm my-5 border-collapse border">
           <tbody>
             <tr className="border-b">

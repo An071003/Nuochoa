@@ -55,14 +55,13 @@ export default function CheckoutInfo() {
             return;
         }
 
-        navigate("/checkout/spinning", { state: { cartItems, formData } });
+        navigate("/checkout/payment", { state: { cartItems, formData } });
     };
 
     const steps = [
         { index: 1, label: "Giỏ hàng", path: "/cart" },
         { index: 2, label: "Thông tin", path: "/checkout/info" },
-        { index: 3, label: "Vận chuyển", path: null },
-        { index: 4, label: "Thanh toán", path: null },
+        { index: 3, label: "Thanh toán", path: null },
     ];
 
     const handleBackToCart = () => {
