@@ -5,7 +5,6 @@ import CartItem from "../../components/CartItem/CartItem";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true); // Trạng thái loading
   const [error, setError] = useState(null); // Trạng thái lỗi
   const navigate = useNavigate();
 
@@ -29,8 +28,6 @@ export default function Cart() {
       } catch (err) {
         setError(err.message);
         message.error("Có lỗi xảy ra khi tải giỏ hàng.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -57,9 +54,27 @@ export default function Cart() {
     );
   };
 
-  // Hàm xử lý xóa sản phẩm
-  const handleRemove = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const handleRemove = async (id) => {
+    try {
+      // Gửi yêu cầu DELETE để xóa sản phẩm
+      const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Đảm bảo gửi cookie cho yêu cầu xác thực
+      });
+
+      if (!response.ok) {
+        throw new Error("Không thể xóa sản phẩm");
+      }
+
+      // Cập nhật giỏ hàng sau khi xóa thành công
+      const updatedCart = await response.json();
+      setCartItems(updatedCart); // Cập nhật lại trạng thái giỏ hàng
+    } catch (err) {
+      message.error("Có lỗi xảy ra khi xóa sản phẩm.");
+    }
   };
 
   // Tính tổng tiền
@@ -67,10 +82,6 @@ export default function Cart() {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-  if (loading) {
-    return <div>Đang tải giỏ hàng...</div>;
-  }
 
   if (error) {
     return <div>Đã xảy ra lỗi: {error}</div>;
