@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icon từ react-icons
+import { API_URL } from "../../../config/webpack.config";
 
 // ErrorModal Component
 const ErrorModal = ({ error, onClose }) => {
@@ -36,7 +37,7 @@ const ResetPassword = () => {
       try {
         console.log("Verifying token:", token);
 
-        const response = await fetch("http://localhost:5001/api/auth/verify-reset-token", {
+        const response = await fetch(`${API_URL}/api/auth/verify-reset-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -81,7 +82,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/reset-password", {
+      const response = await fetch(`${API_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

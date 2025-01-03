@@ -18,7 +18,6 @@ import { API_URL } from "../../config/webpack.config";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import ResetPassword from "../components/ResetPassword";
 
-// Component PrivateRoute để kiểm tra xác thực
 const PrivateRoute = ({ element }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
@@ -30,7 +29,7 @@ const PrivateRoute = ({ element }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Đảm bảo cookie được gửi theo yêu cầu
+          credentials: "include", // Đảm bảo gửi cookies (token)
         });
 
         if (response.ok) {
@@ -48,13 +47,14 @@ const PrivateRoute = ({ element }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Có thể thay bằng loading spinner
+    return <div>Loading...</div>; // Chờ cho quá trình xác thực hoàn tất
   }
 
   if (isAuthenticated) {
-    return element; // Nếu đã xác thực, render component cần thiết
+    return element; // Render component nếu xác thực thành công
   } else {
-    return <Navigate to="/login" />; // Nếu chưa xác thực, chuyển hướng về /login
+    // Nếu chưa xác thực, chuyển hướng đến login
+    return <Navigate to="/login" replace />;
   }
 };
 

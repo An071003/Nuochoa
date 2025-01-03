@@ -69,6 +69,13 @@ export default function Signup() {
       return;
     }
 
+    // Check if email is valid using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setError("Email không hợp lệ!");
+      setLoading(false);
+      return;
+    }
     try {
       const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
@@ -130,6 +137,7 @@ export default function Signup() {
 
         {/* Email Input */}
         <input
+
           type="email"
           name="email"
           value={email}

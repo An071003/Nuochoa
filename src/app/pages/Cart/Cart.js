@@ -1,41 +1,41 @@
-import React, { useState } from "react";
+import { message } from "antd";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CartItem from "../../components/CartItem/CartItem";
 
 export default function Cart() {
-  // Dữ liệu sản phẩm mẫu
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Triump Bacchus",
-      price: 5200000,
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "Triump Bdsafs",
-      price: 5200000,
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 3,
-      name: "Triumpdsas",
-      price: 5200000,
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 4,
-      name: "Triump Bacchus",
-      price: 5200000,
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-  ]);
-
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true); // Trạng thái loading
+  const [error, setError] = useState(null); // Trạng thái lỗi
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/cart", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Không thể tải giỏ hàng.");
+        }
+
+        const data = await response.json();
+        setCartItems(data);
+      } catch (err) {
+        setError(err.message);
+        message.error("Có lỗi xảy ra khi tải giỏ hàng.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, [navigate]);
 
   // Hàm xử lý tăng số lượng
   const handleIncrease = (id) => {
@@ -67,6 +67,14 @@ export default function Cart() {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
+  if (loading) {
+    return <div>Đang tải giỏ hàng...</div>;
+  }
+
+  if (error) {
+    return <div>Đã xảy ra lỗi: {error}</div>;
+  }
 
   return (
     <div className="container min-h-[400px] max-w-[960px] mx-auto py-8">

@@ -34,6 +34,14 @@ export default function Login() {
     setError(""); // Reset previous errors
     setLoading(true); // Start loading
 
+    // Check if email is a valid Gmail address
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(email)) {
+      setError("Vui lòng nhập địa chỉ Gmail hợp lệ!");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
