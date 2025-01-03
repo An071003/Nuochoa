@@ -25,6 +25,7 @@ export default function ProductDetail() {
         }
         const data = await response.json();
         setProduct(data);
+
       } catch (err) {
         setError(err.message);
       } finally {
@@ -58,7 +59,10 @@ export default function ProductDetail() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ productId: id }),
+        body: JSON.stringify({
+          productId: id,
+          quantity: quantity
+        }),
         credentials: "include",
       });
 
@@ -68,7 +72,7 @@ export default function ProductDetail() {
 
       const cartData = await response.json();
       message.success(`Đã thêm ${quantity} sản phẩm ${product.name} (${selectedSize}) vào giỏ hàng!`);
-      console.log("Giỏ hàng sau khi thêm sản phẩm:", cartData); // You can use this to update cart state if needed
+      console.log("Giỏ hàng sau khi thêm sản phẩm:", cartData);
     } catch (err) {
       message.error(err.message);
       console.error("Error in addToCart:", err);
@@ -104,7 +108,7 @@ export default function ProductDetail() {
 
         <div className="md:w-1/2 p-4">
           <h2 className="text-2xl font-bold">{product.name}</h2>
-          <p className="text-xl text-red-600">{product.price} VND</p>
+          <p className="text-xl mt-6 text-red-600">{product.price.toLocaleString()} VND</p>
           <div className="mt-4">
             <h3 className="text-lg font-semibold">Chọn kích thước:</h3>
             <div className="flex space-x-4 mt-2">
@@ -116,7 +120,7 @@ export default function ProductDetail() {
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
-                </div>  
+                </div>
               ))}
             </div>
           </div>

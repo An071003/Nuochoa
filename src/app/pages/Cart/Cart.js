@@ -25,10 +25,12 @@ export default function Cart() {
 
         const data = await response.json();
         setCartItems(data);
+        console.log(data);
       } catch (err) {
         setError(err.message);
         message.error("Có lỗi xảy ra khi tải giỏ hàng.");
       }
+      
     };
 
     fetchCartItems();
@@ -41,6 +43,33 @@ export default function Cart() {
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
+  };
+
+  // Hàm xử lý cập nhật số lượng
+  const handleUpdateQuantity = async (id, newQuantity) => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ 
+          quantity: newQuantity 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Không thể cập nhật số lượng.");
+      }
+
+      const updatedCart = await response.json();
+      console.log(updatedCart);
+      setCartItems(updatedCart); // Cập nhật lại giỏ hàng với số lượng mới
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      message.error("Có lỗi xảy ra khi cập nhật số lượng.");
+    }
   };
 
   // Hàm xử lý giảm số lượng
@@ -96,8 +125,7 @@ export default function Cart() {
             <p className="text-lg text-gray-500">Giỏ hàng của bạn đang trống!</p>
             <button
               className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md"
-              onClick={() => navigate("/")}
-            >
+              onClick={() => navigate("/")}>
               Tiếp tục mua sắm
             </button>
           </div>
@@ -124,6 +152,7 @@ export default function Cart() {
                     onIncrease={handleIncrease}
                     onDecrease={handleDecrease}
                     onRemove={handleRemove}
+                    onUpdateQuantity={handleUpdateQuantity}
                   />
                 ))}
               </tbody>
@@ -134,8 +163,7 @@ export default function Cart() {
               </p>
               <button
                 className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                onClick={() => navigate("/checkout/info", { state: { cartItems } })}
-              >
+                onClick={() => navigate("/checkout/info", { state: { cartItems } })}>
                 Thanh toán
               </button>
             </div>
