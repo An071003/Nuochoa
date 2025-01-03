@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config/webpack.config";
 
 // ErrorModal Component
 const ErrorModal = ({ error, onClose }) => {
@@ -50,7 +51,7 @@ export default function ForgotPassword() {
     setLoading(true); // Start loading
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/forgot-password", {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

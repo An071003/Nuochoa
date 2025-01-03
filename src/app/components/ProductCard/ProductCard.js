@@ -5,27 +5,32 @@ export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    // Chuyển hướng và truyền dữ liệu sản phẩm vào state
-    navigate(`/product/${product.id}`, { state: { product } });
+    navigate(`/product/${product._id}`, { state: { product } });
   };
 
   return (
-    <div className="bg-white border-1 border-spacing-80 shadow-lg rounded-lg overflow-hidden hover:scale-105 transform transition duration-300" onClick={handleClick}>
-      {/* Hình ảnh sản phẩm */}
+    <div
+      className="bg-white border-1 border-spacing-80 shadow-lg rounded-lg overflow-hidden hover:scale-105 transform transition duration-300"
+      onClick={handleClick}
+    >
       <img
-        src={product.images[0]}
+        src={product.image}
         alt={product.name}
         className="w-full h-64 object-cover border rounded-t-lg"
       />
       <div className="p-4">
-        {/* Tên sản phẩm */}
         <h3 className="flex text-lg font-bold justify-center">{product.name}</h3>
-        {/* Giá sản phẩm */}
         <div className="flex items-center space-x-2 mt-2 justify-center">
-          <span className="text-red-600 font-bold">{product.price}</span>
-          <span className="text-gray-500 line-through">{product.oldPrice}</span>
+          <span className="text-red-600 font-bold">{product.price} VND</span>
         </div>
-        <div className="absolute top-52 left-2 bottom-[98px] text-white bg-red-600 p-2 rounded-md"> Giảm giá</div>
+        {product.oldPrice && (
+          <span className="text-gray-500 line-through">{product.oldPrice} VND</span>
+        )}
+        {product.oldPrice && (
+          <div className="absolute top-52 left-2 text-white bg-red-600 p-2 rounded-md">
+            Giảm giá
+          </div>
+        )}
       </div>
     </div>
   );
