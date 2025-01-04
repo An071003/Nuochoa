@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icons
-
-// Lấy URL API từ biến môi trường
-const API_URL = process.env.REACT_APP_API_URL; 
+import { API_URL } from "../../../config/webpack.config";
 
 // ErrorModal Component
 const ErrorModal = ({ error, onClose }) => {
