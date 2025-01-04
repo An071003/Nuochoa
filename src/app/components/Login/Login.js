@@ -48,7 +48,7 @@ export default function Login() {
         // If login is successful, redirect to home page or dashboard
         console.log("Login successful", result);
         if (result.role === "admin") {
-          navigate("/");
+          navigate("/admin/dashboard");
         } else {
           navigate("/");
         }

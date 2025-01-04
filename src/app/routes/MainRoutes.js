@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 // Các component
 import { API_URL } from "../../config/webpack.config";
+import CategoryPage from "../components/CategoryPage";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import Login from "../components/Login";
 import ResetPassword from "../components/ResetPassword";
@@ -11,14 +12,17 @@ import ConfirmPopup from "../components/confirmpopup";
 import PageNotFound from "../layouts/PageNotFound";
 import UserLayout from "../layouts/UserLayout/UserLayout";
 import Cart from "../pages/Cart/Cart";
-import VerifyCode from "../components/VerifyCode";
-import Login from "../components/Login";
 import CheckoutInfo from "../pages/Checkout/CheckoutInfo";
 import CheckoutPayment from "../pages/Checkout/CheckoutPayment";
 import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
 import UserPage from "../pages/UserPage";
-import CategoryPage from "../components/CategoryPage";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout"
+import ProductList from "../pages/Admin/ProductManage/ProductList";
+import Dashboard from "../pages/Admin/Dashboard/Dashboard"
+import Coupons from "../pages/Admin/Coupons/Coupons"
+import OrderList from "../pages/Admin/OrderManage/OrderList"
+import UserList from "../pages/Admin/UserManage/UserList"
 
 const PrivateRoute = ({ element, roles }) => {
   const [userRole, setUserRole] = useState(null);
@@ -124,6 +128,7 @@ const MainRoutes = () => {
           <Route path="/checkout/info" element={<PrivateRoute element={<CheckoutInfo />} />} />
           <Route path="/checkout/payment" element={<PrivateRoute element={<CheckoutPayment />} />} />
           <Route path="/user" element={<PrivateRoute element={<UserPage />} />} />
+          <Route path="/category/:category" element={<PrivateRoute element={<CategoryPage/>}/>} />
         </Route>
 
         {/* Route dành cho admin */}
