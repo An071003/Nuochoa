@@ -17,8 +17,15 @@ import UserLayout from "../layouts/UserLayout/UserLayout";
 import { API_URL } from "../../config/webpack.config";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import ResetPassword from "../components/ResetPassword";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
+import ProductList from "../pages/Admin/ProductManage/ProductList";
+import Dashboard from "../pages/Admin/Dashboard/Dashboard";
+import Coupons from "../pages/Admin/Coupons/Coupons";
+import UserList from "../pages/Admin/UserManage/UserList";
+import OrderList from "../pages/Admin/OrderManage/OrderList";
 
-const PrivateRoute = ({ element }) => {
+const PrivateRoute = ({ element, roles }) => {
+  const [userRole, setUserRole] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
@@ -33,6 +40,8 @@ const PrivateRoute = ({ element }) => {
         });
 
         if (response.ok) {
+          const data = await response.json();
+          setUserRole(data.role); // Lấy role từ response
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
@@ -47,14 +56,52 @@ const PrivateRoute = ({ element }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Chờ cho quá trình xác thực hoàn tất
+    return <div>Loading...</div>; // Hiển thị trong khi chờ xác thực
   }
 
-  if (isAuthenticated) {
-    return element; // Render component nếu xác thực thành công
+  if (isAuthenticated && roles.includes(userRole)) {
+    return element; // Render component nếu xác thực thành công và vai trò phù hợp
   } else {
-    // Nếu chưa xác thực, chuyển hướng đến login
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />; // Chuyển hướng đến login nếu không hợp lệ
+  }
+};
+
+const AdminRoute = ({ element }) => {
+  const [isAdmin, setIsAdmin] = useState(null);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/auth/check-admin`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Đảm bảo gửi cookies (token)
+        });
+
+        if (response.ok) {
+          setIsAdmin(true); // Người dùng là admin
+        } else {
+          setIsAdmin(false); // Người dùng không phải admin
+        }
+      } catch (error) {
+        console.error("Lỗi xác thực admin:", error);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdmin();
+  }, []);
+
+  if (isAdmin === null) {
+    return <div>Loading...</div>; // Hiển thị trong khi chờ xác thực
+  }
+
+  if (isAdmin) {
+    return element; // Render component nếu là admin
+  } else {
+    return <Navigate to="/" replace />; // Chuyển hướng nếu không phải admin
   }
 };
 
@@ -82,7 +129,14 @@ const MainRoutes = () => {
           <Route path="/user" element={<PrivateRoute element={<UserPage />} />} />
         </Route>
 
-        {/* Route fallback cho trang không tìm thấy */}
+        {/* Route dành cho admin */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="product" element={<AdminRoute element={<ProductList />} />} />
+          <Route path="dashboard" element={<AdminRoute element={<Dashboard />} />} />
+          <Route path="coupons" element={<AdminRoute element={<Coupons />} />} />
+          <Route path="user" element={<AdminRoute element={<UserList />} />} />
+          <Route path="order" element={<AdminRoute element={<OrderList />} />} />
+        </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
