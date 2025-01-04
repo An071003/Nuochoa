@@ -39,6 +39,12 @@ export default function Login() {
       const result = await response.json();
 
       if (response.ok) {
+        if(result.role === "admin") {
+          navigate("/admin/dashboard");
+        }else{
+          navigate("/");
+        }
+        Cookies.set("user_role", result.role, { expires: rememberMe ? 7 : 1 })
         // If login is successful, redirect to home page or dashboard
         console.log("Login successful", result);
         if (result.role === "admin") {

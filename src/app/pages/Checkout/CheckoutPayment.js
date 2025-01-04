@@ -16,7 +16,6 @@ export default function CheckoutPayment() {
     postalCode: "",
     phone: "",
   };
-
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [formData, setFormData] = useState(initialFormData);
   const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" - Thanh toán khi nhận hàng, "QRCode" - Thanh toán qua QR
