@@ -17,6 +17,7 @@ import UserLayout from "../layouts/UserLayout/UserLayout";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import ResetPassword from "../components/ResetPassword";
 import PrivateRoute from "./PrivateRoute"; // Đảm bảo import đúng PrivateRoute
+import Products from "../pages/Products";  // Import Products.js
 
 const MainRoutes = () => {
   return (
@@ -41,6 +42,9 @@ const MainRoutes = () => {
           <Route path="/checkout/payment" element={<PrivateRoute><CheckoutPayment /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><UserPage /></PrivateRoute>} />
         </Route>
+
+        {/* Route cho danh sách sản phẩm (không yêu cầu bảo vệ nếu cần) */}
+        <Route path="/products" element={<Products />} />
 
         {/* Route fallback cho trang không tìm thấy */}
         <Route path="*" element={<PageNotFound />} />
