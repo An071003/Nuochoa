@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 // Các component
-import Home from "../pages/Home";
-import ProductDetail from "../pages/ProductDetail";
+import { API_URL } from "../../config/webpack.config";
+import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
+import Login from "../components/Login";
+import ResetPassword from "../components/ResetPassword";
+import SignUp from "../components/SignUp";
+import ConfirmPopup from "../components/confirmpopup";
+import PageNotFound from "../layouts/PageNotFound";
+import UserLayout from "../layouts/UserLayout/UserLayout";
 import Cart from "../pages/Cart/Cart";
 import CheckoutInfo from "../pages/Checkout/CheckoutInfo";
 import CheckoutPayment from "../pages/Checkout/CheckoutPayment";
+import Home from "../pages/Home";
+import ProductDetail from "../pages/ProductDetail";
 import UserPage from "../pages/UserPage";
-import PageNotFound from "../layouts/PageNotFound";
-import SignUp from "../components/SignUp";
-import Login from "../components/Login";
-import VerifyCode from "../components/VerifyCode";
-import ConfirmPopup from "../components/confirmpopup";
-import UserLayout from "../layouts/UserLayout/UserLayout";
-import { API_URL } from "../../config/webpack.config";
-import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
-import ResetPassword from "../components/ResetPassword";
+import CategoryPage from "../components/CategoryPage";
 
 const PrivateRoute = ({ element }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -47,7 +47,7 @@ const PrivateRoute = ({ element }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Chờ cho quá trình xác thực hoàn tất
+    return <div>Loading...</div>;
   }
 
   if (isAuthenticated) {
@@ -65,7 +65,7 @@ const MainRoutes = () => {
         {/* Các route không yêu cầu authentication */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/verify-code" element={<VerifyCode />} />
+
         <Route path="/confirm" element={<ConfirmPopup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
@@ -75,6 +75,7 @@ const MainRoutes = () => {
           <Route path="/" element={<Home />} />
 
           {/* Các route bảo vệ */}
+          <Route path="/category/:category" element={<PrivateRoute element={<CategoryPage />} />} />
           <Route path="/product/:id" element={<PrivateRoute element={<ProductDetail />} />} />
           <Route path="/cart" element={<PrivateRoute element={<Cart />} />} />
           <Route path="/checkout/info" element={<PrivateRoute element={<CheckoutInfo />} />} />

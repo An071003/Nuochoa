@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import ConfirmPopup from "../../components/confirmpopup"; // Đảm bảo đường dẫn đúng
 
-export default function CartItem({ product, onIncrease, onDecrease, onRemove, onUpdateQuantity }) {
+export default function CartItem({ product, onRemove, onUpdateQuantity }) {
   const [showPopup, setShowPopup] = useState(false);
   const handleConfirmDelete = (confirm) => {
     if (confirm) {
@@ -70,7 +70,7 @@ export default function CartItem({ product, onIncrease, onDecrease, onRemove, on
             className="text-red-500 hover:underline"
             onClick={() => setShowPopup(true)}
           >
-            <MdDelete className="text-[25px] text-[#283149] hover:scale-125" />
+            <MdDelete className="ml-1 text-[25px] text-[#283149] hover:scale-125" />
           </button>
         </td>
       </tr>

@@ -25,27 +25,18 @@ export default function Cart() {
 
         const data = await response.json();
         setCartItems(data);
-        console.log(data);
+        localStorage.setItem("cartItems", JSON.stringify(data));
       } catch (err) {
         setError(err.message);
         message.error("Có lỗi xảy ra khi tải giỏ hàng.");
       }
-      
+
     };
 
     fetchCartItems();
   }, [navigate]);
 
-  // Hàm xử lý tăng số lượng
-  const handleIncrease = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  // Hàm xử lý cập nhật số lượng
+  // Trong Cart component, sau khi cập nhật giỏ hàng
   const handleUpdateQuantity = async (id, newQuantity) => {
     try {
       const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
@@ -54,8 +45,8 @@ export default function Cart() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ 
-          quantity: newQuantity 
+        body: JSON.stringify({
+          quantity: newQuantity
         }),
       });
 
@@ -64,23 +55,13 @@ export default function Cart() {
       }
 
       const updatedCart = await response.json();
-      console.log(updatedCart);
-      setCartItems(updatedCart); // Cập nhật lại giỏ hàng với số lượng mới
+      setCartItems(updatedCart);
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
     } catch (error) {
       console.error("Error updating quantity:", error);
       message.error("Có lỗi xảy ra khi cập nhật số lượng.");
     }
-  };
-
-  // Hàm xử lý giảm số lượng
-  const handleDecrease = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
   };
 
   const handleRemove = async (id) => {
@@ -122,7 +103,7 @@ export default function Cart() {
         <div>
           <h1 className="text-2xl font-bold mb-6 text-center">Giỏ hàng của bạn</h1>
           <div className="text-center">
-            <p className="text-lg text-gray-500">Giỏ hàng của bạn đang trống!</p>
+            <p className="text-lg text-[#283149]">Giỏ hàng của bạn đang trống!</p>
             <button
               className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md"
               onClick={() => navigate("/")}>
@@ -136,21 +117,19 @@ export default function Cart() {
           <div className="bg-white shadow-md rounded-lg p-6">
             <table className="w-full table-auto border-collapse border border-gray-200">
               <thead>
-                <tr className="text-left border-b">
-                  <th className="p-3">Sản phẩm</th>
-                  <th className="p-3">Giá</th>
-                  <th className="p-3">Số lượng</th>
+                <tr className="border-b">
+                  <th className="p-3 text-left">Sản phẩm</th>
+                  <th className="p-3 text-left">Giá</th>
+                  <th className="p-3 text-center">Số lượng</th>
                   <th className="p-3 text-center">Tổng</th>
-                  <th className="p-3">Xoá</th>
+                  <th className="p-3 text-left">Xoá</th>
                 </tr>
               </thead>
               <tbody>
                 {cartItems.map((product) => (
                   <CartItem
-                    key={product.id}
+                    key={`${product.id}-${product.name}`}
                     product={product}
-                    onIncrease={handleIncrease}
-                    onDecrease={handleDecrease}
                     onRemove={handleRemove}
                     onUpdateQuantity={handleUpdateQuantity}
                   />

@@ -21,7 +21,7 @@ export default function CheckoutPayment() {
 
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [formData, setFormData] = useState(initialFormData);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" - Thanh toán khi nhận hàng, "QRCode" - Thanh toán qua QR
 
   // Lưu dữ liệu vào localStorage khi có thay đổi
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function CheckoutPayment() {
   }, [cartItems, formData]);
 
   // Hàm thay đổi phí Thanh toán
-  const handleShippingChange = (cost) => {
-    setShippingCost(cost);
+  const handlePaymentMethodChange = (method) => {
+    setPaymentMethod(method);
   };
 
   // Hàm chỉnh sửa thông tin quay lại bước trước
@@ -41,7 +41,7 @@ export default function CheckoutPayment() {
 
   // Hàm chuyển đến phần thanh toán
   const handleProceedToPayment = () => {
-    navigate("/checkout/payment", { state: { formData, cartItems, shippingCost } });
+    navigate("/checkout/payment", { state: { formData, cartItems, paymentMethod } });
   };
 
   // Tính tổng giá trị giỏ hàng
@@ -53,9 +53,8 @@ export default function CheckoutPayment() {
   const steps = [
     { index: 1, label: "Giỏ hàng", path: "/cart" },
     { index: 2, label: "Thông tin", path: "/checkout/info" },
-    { index: 3, label: "Thanh toán", path: "/checkout/Payment" },
+    { index: 3, label: "Thanh toán", path: "/checkout/payment" },
   ];
-
 
   return (
     <div className="container mx-auto p-14 flex flex-col lg:flex-row lg:space-x-4">
@@ -101,43 +100,31 @@ export default function CheckoutPayment() {
         </table>
 
         {/* Lựa chọn phương thức Thanh toán */}
-        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Thanh toán</h1>
-        <table className="min-w-full table-auto text-sm my-5 border-collapse border">
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2 px-4 text-gray-800 w-fit text-right">
-                <label className="flex items-center font-sans font-bold py-2 text-left">
-                  <input
-                    type="radio"
-                    name="shipping"
-                    className="mr-2"
-                    onChange={() => handleShippingChange(20000)}
-                  />
-                  Giao hàng tiêu chuẩn
-                </label>
-              </td>
-              <td className="p-4 text-right">
-                20,000₫
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 px-4 text-gray-800 w-fit text-right">
-                <label className="flex items-center font-sans font-bold py-2 text-left">
-                  <input
-                    type="radio"
-                    name="shipping"
-                    className="mr-2"
-                    onChange={() => handleShippingChange(50000)}
-                  />
-                  Giao hàng nhanh
-                </label>
-              </td>
-              <td className="p-4 text-right text-">
-                50,000₫
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Phương thức Thanh toán</h1>
+        <div className="space-y-4">
+          <div>
+            <input
+              type="radio"
+              id="COD"
+              name="paymentMethod"
+              checked={paymentMethod === "COD"}
+              onChange={() => handlePaymentMethodChange("COD")}
+              className="mr-2"
+            />
+            <label htmlFor="COD" className="font-sans font-bold">Thanh toán khi nhận hàng</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="QRCode"
+              name="paymentMethod"
+              checked={paymentMethod === "QRCode"}
+              onChange={() => handlePaymentMethodChange("QRCode")}
+              className="mr-2"
+            />
+            <label htmlFor="QRCode" className="font-sans font-bold">Thanh toán qua QRCode</label>
+          </div>
+        </div>
 
         {/* Nút chuyển đến phần thanh toán */}
         <div className="flex justify-between mt-6">
@@ -154,7 +141,7 @@ export default function CheckoutPayment() {
               onClick={handleProceedToPayment}
               className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
             >
-              Chuyển đến phần thanh toán
+              Thanh toán
             </button>
           </div>
         </div>
@@ -163,7 +150,6 @@ export default function CheckoutPayment() {
       {/* Phần Summary */}
       <CheckoutSummary
         cartItems={cartItems}
-        shippingCost={shippingCost}
         total={total}
       />
     </div>

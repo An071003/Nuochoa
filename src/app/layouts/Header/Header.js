@@ -1,30 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CiUser, CiSearch, CiShoppingBasket } from "react-icons/ci";
 import Logo from "../../assets/image/resized_image_5_3.png";
+import { API_URL } from "../../../config/webpack.config";
 
 function Header() {
   const navigate = useNavigate();
 
-  // User mẫu
-  const user = {
-    username: "johndoe",
-    firstname: "John",
-    lastname: "Doe",
-    email: "johndoe@example.com",
-    hashPassword: "12345hashedpassword",
-    avatar: "https://via.placeholder.com/150"
-  };
-
-  const isLoggedIn = true; // Thay bằng trạng thái thực tế của ứng dụng bạn
-
-  const handleUserClick = () => {
-    if (isLoggedIn) {
-      navigate("/user", { state: { user } });
-    } else {
-      navigate("/login");
-    }
-  };
+  // State để lưu thông tin người dùng và xử lý loading/error
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   return (
     <header className="bg-[#FFF6E3] text-[#283149] sticky top-0 z-50">
@@ -49,22 +35,26 @@ function Header() {
 
           {/* Gợi ý tìm kiếm */}
           <div className="absolute bottom-[-30px] left-0 w-full flex justify-center space-x-4 pt-2 text-sm">
-            <span className="hover:underline cursor-pointer">Nước hoa nam</span>
-            <span className="hover:underline cursor-pointer">Nước hoa nữ</span>
-            <span className="hover:underline cursor-pointer">Nước hoa unisex</span>
-            <span className="hover:underline cursor-pointer">All Product</span>
-            <span className="hover:underline cursor-pointer">Về Maison</span>
+            <Link to="/category/Nước hoa nam" className="hover:underline cursor-pointer">
+              Nước hoa nam
+            </Link>
+            <Link to="/category/Nước hoa nữ" className="hover:underline cursor-pointer">
+              Nước hoa nữ
+            </Link>
+            <Link to="/category/Nước unisex" className="hover:underline cursor-pointer">
+              Nước unisex
+            </Link>
           </div>
         </div>
 
         {/* Nút user và giỏ hàng */}
         <div className="flex items-center space-x-4">
-          <button
-            onClick={handleUserClick}
+          <Link to="/user"
             className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80"
           >
             <CiUser className="w-5 h-5" />
-          </button>
+          </Link>
+
           <Link
             to="/cart"
             className="bg-[#283149] text-white px-3 py-2 rounded-full hover:bg-opacity-80 flex items-center"
@@ -74,6 +64,13 @@ function Header() {
           </Link>
         </div>
       </div>
+
+      {/* Hiển thị thông báo lỗi nếu có */}
+      {error && (
+        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white py-2 text-center">
+          {error}
+        </div>
+      )}
     </header>
   );
 }

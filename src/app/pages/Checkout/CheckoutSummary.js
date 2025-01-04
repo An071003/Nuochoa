@@ -1,7 +1,6 @@
 import React from "react";
 
-export default function CheckoutSummary({ cartItems, shippingCost, total }) {
-  const totalWithShipping = total + shippingCost;
+export default function CheckoutSummary({ cartItems, total }) {
 
   return (
     <div className="w-full lg:w-1/3 bg-gray-100 shadow-md rounded-lg p-6">
@@ -32,16 +31,8 @@ export default function CheckoutSummary({ cartItems, shippingCost, total }) {
       <table className="w-full mt-6">
         <tbody>
           <tr>
-            <td className=" text-lg font-bold">Tổng phụ:</td>
+            <td className=" text-lg font-bold">Tổng:</td>
             <td className="text-right text-lg font-bold">{total.toLocaleString()}₫</td>
-          </tr>
-          <tr>
-            <td className="text-lg font-bold">Tiền vận chuyển:</td>
-            <td className="text-right text-lg font-bold">{shippingCost.toLocaleString()}₫</td>
-          </tr>
-          <tr>
-            <td className="pt-4 text-xl font-bold mt-4">Tổng cộng:</td>
-            <td className="pt-4 text-right text-xl font-bold mt-4">{totalWithShipping.toLocaleString()}₫</td>
           </tr>
         </tbody>
       </table>
