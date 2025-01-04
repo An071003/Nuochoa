@@ -1,3 +1,3 @@
-const API_URL = "http://localhost:5001"
+const API_URL = "https://web2-rho-gray.vercel.app/"
 
 export { API_URL }
