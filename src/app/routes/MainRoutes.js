@@ -17,7 +17,7 @@ import UserLayout from "../layouts/UserLayout/UserLayout";
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 import ResetPassword from "../components/ResetPassword";
 import PrivateRoute from "./PrivateRoute"; // Đảm bảo import đúng PrivateRoute
-import Products from ".../Products.js";  // Import Products.js
+import Products from "src/Products.js";  // Import Products.js
 
 const MainRoutes = () => {
   return (
