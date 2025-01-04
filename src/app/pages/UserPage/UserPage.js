@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config/webpack.config";
+import { message } from "antd";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
@@ -8,9 +9,7 @@ const UserPage = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // Hàm lấy thông tin người dùng
   const getUserProfile = async () => {
     setLoading(true);
     setError(null);
@@ -18,7 +17,7 @@ const UserPage = () => {
     try {
       const response = await fetch(`${API_URL}/api/auth/profile`, {
         method: "GET",
-        credentials: "include", // Đảm bảo cookies được gửi kèm theo yêu cầu
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -26,13 +25,13 @@ const UserPage = () => {
       }
 
       const result = await response.json();
-      setUser(result); // Cập nhật thông tin người dùng vào state
+      setUser(result);
     } catch (error) {
-      setError(error.message); // Xử lý lỗi
-      setUser(null); // Nếu có lỗi, đặt user = null
-      navigate("/login"); // Chuyển hướng đến trang login nếu có lỗi
+      setError(error.message);
+      setUser(null);
+      navigate("/login");
     } finally {
-      setLoading(false); // Kết thúc quá trình loading
+      setLoading(false);
     }
   };
 
@@ -65,7 +64,7 @@ const UserPage = () => {
       }
 
       const result = await response.json();
-      setUser(result.user); // Cập nhật người dùng sau khi thay đổi thông tin
+      setUser(result.user);
     } catch (error) {
       console.error("Error in updateUserProfile:", error.message);
     }
@@ -75,8 +74,8 @@ const UserPage = () => {
   const handleSave = async (field) => {
     try {
       const updatedData = { [field]: user[field] };
-      await updateUserProfile(updatedData); // Gọi API để cập nhật
-      setEditingField(null); // Tắt chế độ chỉnh sửa
+      await updateUserProfile(updatedData);
+      setEditingField(null);
     } catch (error) {
       console.error("Cập nhật thông tin thất bại:", error.message);
     }
@@ -86,8 +85,8 @@ const UserPage = () => {
   const handleAvatarSave = async () => {
     try {
       const updatedData = { avatar: user.avatar };
-      await updateUserProfile(updatedData); // Gọi API để cập nhật avatar
-      setIsEditingAvatar(false); // Tắt chế độ chỉnh sửa avatar
+      await updateUserProfile(updatedData);
+      setIsEditingAvatar(false);
     } catch (error) {
       console.error("Cập nhật avatar thất bại:", error.message);
     }
@@ -105,16 +104,34 @@ const UserPage = () => {
     }
   };
 
-  if (loading) {
-    return <div>Đang tải...</div>; // Hiển thị khi đang tải dữ liệu
-  }
+  const handleChangePassword = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: user.email }),
+      });
 
-  // Kiểm tra nếu chưa có user thì không render các field để tránh lỗi
+      const result = await response.json();
+
+      if (response.ok) {
+        const successMessage = "Đã gửi email hướng dẫn đổi mật khẩu!";
+        message.success(successMessage);
+      } else {
+        throw new Error("Đã có lỗi xảy ra. Vui lòng thử lại.");
+      }
+    } catch (err) {
+      message.error(err.message);
+    }
+  };
+
   if (!user) {
-    return null; // Hoặc có thể hiển thị một loading hoặc thông báo khác
+    return null;
   }
   const handleCloseModal = () => {
-    setError(""); // Reset error when closing modal
+    setError("");
   };
 
   return (
@@ -233,7 +250,7 @@ const UserPage = () => {
             </div>
           ) : (
             <button
-              onClick={() => setIsEditingPassword(true)}
+              onClick={() => handleChangePassword()}
               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
             >
               Đổi mật khẩu

@@ -1,19 +1,21 @@
 import { message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {API_URL} from "../../../config/webpack.config"
 
 export default function ProductDetail() {
-  const { id } = useParams(); // Lấy ID sản phẩm từ URL
-  const [product, setProduct] = useState(null); // Dữ liệu sản phẩm
-  const [loading, setLoading] = useState(true); // Trạng thái loading
-  const [error, setError] = useState(null); // Lưu lỗi nếu xảy ra
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("Full 100ml");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/products/${id}`, {
+        const response = await fetch(`${API_URL}/api/products/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -41,10 +43,9 @@ export default function ProductDetail() {
 
   const addToCart = async () => {
     try {
-      // Gửi yêu cầu tới API để xác thực token (server sẽ lấy token từ cookie)
       const cookie = await fetch("http://localhost:5001/api/auth/verify-token", {
-        method: "GET",  // Dùng GET để kiểm tra token
-        credentials: "include",  // Đảm bảo cookie được gửi đi cùng yêu cầu
+        method: "GET", 
+        credentials: "include", 
       });
 
       if (!cookie.ok) {
@@ -74,15 +75,15 @@ export default function ProductDetail() {
       message.success(`Đã thêm ${quantity} sản phẩm ${product.name} (${selectedSize}) vào giỏ hàng!`);
       console.log("Giỏ hàng sau khi thêm sản phẩm:", cartData);
     } catch (err) {
+      navigate("/login", { replace: true });
       message.error(err.message);
-      console.error("Error in addToCart:", err);
     }
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl font-semibold text-gray-500">Đang tải thông tin sản phẩm...</p>
+        <p className="text-xl font-sans text-gray-500">Đang tải thông tin sản phẩm...</p>
       </div>
     );
   }
@@ -90,7 +91,7 @@ export default function ProductDetail() {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl font-semibold text-red-500">{error}</p>
+        <p className="text-xl font-sans text-red-500">{error}</p>
       </div>
     );
   }

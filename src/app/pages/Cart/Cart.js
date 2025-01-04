@@ -5,7 +5,7 @@ import CartItem from "../../components/CartItem/CartItem";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export default function Cart() {
     fetchCartItems();
   }, [navigate]);
 
-  // Trong Cart component, sau khi cập nhật giỏ hàng
   const handleUpdateQuantity = async (id, newQuantity) => {
     try {
       const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
@@ -66,22 +65,20 @@ export default function Cart() {
 
   const handleRemove = async (id) => {
     try {
-      // Gửi yêu cầu DELETE để xóa sản phẩm
       const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Đảm bảo gửi cookie cho yêu cầu xác thực
+        credentials: "include", 
       });
 
       if (!response.ok) {
         throw new Error("Không thể xóa sản phẩm");
       }
 
-      // Cập nhật giỏ hàng sau khi xóa thành công
       const updatedCart = await response.json();
-      setCartItems(updatedCart); // Cập nhật lại trạng thái giỏ hàng
+      setCartItems(updatedCart);
     } catch (err) {
       message.error("Có lỗi xảy ra khi xóa sản phẩm.");
     }

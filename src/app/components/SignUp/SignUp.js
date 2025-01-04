@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icons
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { API_URL } from "../../../config/webpack.config";
 import ErrorModal from "../errorbox/errorbox";
 
-// SuccessModal Component
 const SuccessModal = ({ message, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -25,35 +24,31 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
-  const [error, setError] = useState(""); // For error messages
-  const [success, setSuccess] = useState(""); // For success messages
-  const [loading, setLoading] = useState(false); // For loading state
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle form submission
   const handleSignup = async (e) => {
     e.preventDefault();
-    setError(""); // Reset any previous error
-    setSuccess(""); // Reset success message
-    setLoading(true); // Start loading
+    setError("");
+    setSuccess("");
+    setLoading(true);
 
-    // Check if password meets minimum length
     if (password.length < 6) {
       setError("Mật khẩu phải có ít nhất 6 ký tự.");
       setLoading(false);
       return;
     }
 
-    // Check if password and confirm password match
     if (password !== confirmPassword) {
       setError("Mật khẩu không khớp!");
       setLoading(false);
       return;
     }
 
-    // Check if email is valid using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       setError("Email không hợp lệ!");
@@ -66,13 +61,12 @@ export default function Signup() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }), // Send the data to the backend
+        body: JSON.stringify({ name, email, password }), 
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // If signup is successful, show success message
         setSuccess("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
       } else {
         setError(result.message || "Đăng ký thất bại. Vui lòng thử lại.");
@@ -80,19 +74,17 @@ export default function Signup() {
     } catch (error) {
       setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Close the error modal
   const handleCloseErrorModal = () => {
-    setError(""); // Reset error when closing modal
+    setError("");
   };
 
-  // Close the success modal and navigate to login
   const handleCloseSuccessModal = () => {
-    setSuccess(""); // Reset success message
-    navigate("/login"); // Redirect to login page
+    setSuccess(""); 
+    navigate("/login"); 
   };
 
   return (

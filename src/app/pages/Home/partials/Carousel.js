@@ -21,12 +21,11 @@ export default function Carousel() {
         );
     };
 
-    // Auto slide - adjusted to prevent resetting the interval on every change
     useEffect(() => {
         const interval = setInterval(() => {
             nextSlide();
-        }, 3000); // Change slide every 3 seconds
-        return () => clearInterval(interval); // Cleanup interval on component unmount
+        }, 3000);
+        return () => clearInterval(interval);
     }, []);
 
     return (

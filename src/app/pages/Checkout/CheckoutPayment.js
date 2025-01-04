@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import CheckoutSummary from "./CheckoutSummary"; // Import CheckoutSummary
+import CheckoutSummary from "./CheckoutSummary"; 
 import Breadcrumb from "./partials/Breadcrumb";
 
 export default function CheckoutPayment() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Nhận dữ liệu từ localStorage hoặc location.state
   const initialCartItems = JSON.parse(localStorage.getItem("cartItems")) || location.state?.cartItems || [];
   const initialFormData = JSON.parse(localStorage.getItem("formData")) || {
     email: "",
@@ -23,28 +21,23 @@ export default function CheckoutPayment() {
   const [formData, setFormData] = useState(initialFormData);
   const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" - Thanh toán khi nhận hàng, "QRCode" - Thanh toán qua QR
 
-  // Lưu dữ liệu vào localStorage khi có thay đổi
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [cartItems, formData]);
 
-  // Hàm thay đổi phí Thanh toán
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
   };
 
-  // Hàm chỉnh sửa thông tin quay lại bước trước
   const handleEditInfo = () => {
     navigate("/checkout/info");
   };
 
-  // Hàm chuyển đến phần thanh toán
   const handleProceedToPayment = () => {
     navigate("/checkout/payment", { state: { formData, cartItems, paymentMethod } });
   };
 
-  // Tính tổng giá trị giỏ hàng
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0

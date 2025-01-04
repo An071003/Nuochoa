@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "../../../components/ProductCard/ProductCard";
+import { API_URL } from "../../../../config/webpack.config"
 
 export default function ProductList() {
-  const [products, setProducts] = useState([]); // Lưu danh sách sản phẩm
-  const [loading, setLoading] = useState(true); // Trạng thái loading
-  const [error, setError] = useState(null); // Lưu lỗi nếu xảy ra
+  const [products, setProducts] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/products/featured");
+        const response = await fetch(`${API_URL}/api/products/featured`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch featured products");
