@@ -1,53 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const Products = () => {
-  // State để lưu trữ danh sách sản phẩm, trạng thái loading, và lỗi
+  // State để lưu trữ dữ liệu sản phẩm
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // URL của API từ biến môi trường
-  const API_URL = process.env.REACT_APP_API_URL || 'https://web2-backend.vercel.app/api/products';
-
+  // Lấy dữ liệu từ API khi component được render
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/products`); // Gửi request đến API
-        setProducts(response.data); // Lưu dữ liệu sản phẩm vào state
-      } catch (err) {
-        setError(err.message || 'Failed to fetch products'); // Lưu thông báo lỗi nếu có
-      } finally {
-        setLoading(false); // Đặt trạng thái loading thành false
-      }
-    };
+    // Fetch dữ liệu từ API backend
+    fetch('https://web2-backend.vercel.app/api/products')
+      .then((response) => response.json()) // Chuyển đổi phản hồi từ API sang dạng JSON
+      .then((data) => {
+        setProducts(data); // Cập nhật state với dữ liệu từ API
+        setLoading(false); // Đặt trạng thái loading thành false sau khi lấy dữ liệu
+      })
+      .catch((error) => {
+        console.error('Error:', error); // Nếu có lỗi, hiển thị lỗi trên console
+        setLoading(false); // Đặt trạng thái loading thành false nếu có lỗi
+      });
+  }, []); // useEffect sẽ chỉ chạy một lần khi component được render
 
-    fetchProducts(); // Gọi hàm lấy dữ liệu sản phẩm
-  }, [API_URL]); // useEffect chạy lại nếu URL API thay đổi
-
-  // Nếu đang tải dữ liệu, hiển thị "Loading..."
+  // Nếu đang tải dữ liệu, hiển thị thông báo "Loading..."
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  // Nếu có lỗi, hiển thị thông báo lỗi
-  if (error) {
-    return <p style={{ color: 'red' }}>Error: {error}</p>;
-  }
-
-  // Hiển thị danh sách sản phẩm sau khi tải dữ liệu thành công
+  // Hiển thị danh sách sản phẩm sau khi dữ liệu đã được tải
   return (
     <div>
       <h1>Product List</h1>
-      {products.length > 0 ? (
-        <ul>
-          {products.map((product) => (
-            <li key={product.id}>{product.name}</li> // Giả sử sản phẩm có trường 'id' và 'name'
-          ))}
-        </ul>
-      ) : (
-        <p>No products available.</p>
-      )}
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>{product.name}</li> // Giả sử mỗi sản phẩm có trường 'name'
+        ))}
+      </ul>
     </div>
   );
 };
