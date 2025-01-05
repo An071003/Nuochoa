@@ -1,3 +1,3 @@
-const API_URL = "https://web2-aw6gfjujp-phong-les-projects-64cbfed5.vercel.app";
+const API_URL = "https://web2-ie39.onrender.com";
 
 export { API_URL }
