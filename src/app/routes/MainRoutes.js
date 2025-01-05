@@ -24,7 +24,7 @@ import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
 import UserPage from "../pages/UserPage";
 import PrivateRoute from "./PrivateRoute";
-import SearchResults from "../components/SearchResults/SearchResults";
+import SearchResults from "../pages/SearchResults";
 
 const MainRoutes = () => {
   return (

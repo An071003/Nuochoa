@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "../../../components/ProductCard/ProductCard";
-import { API_URL } from "../../../../config/webpack.config"
+import { API_URL } from "../../../../config/webpack.config";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]); 
@@ -16,7 +16,15 @@ export default function ProductList() {
           throw new Error("Failed to fetch featured products");
         }
         const data = await response.json();
-        setProducts(data);
+
+        // Kiểm tra xem data có phải là mảng không
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format received");
+        }
+
+        // Sắp xếp sản phẩm theo countInStock giảm dần
+        const sortedProducts = data.sort((a, b) => b.countInStock - a.countInStock);
+        setProducts(sortedProducts);
       } catch (err) {
         setError(err.message);
       } finally {
