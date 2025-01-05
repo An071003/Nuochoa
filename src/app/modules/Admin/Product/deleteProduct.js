@@ -1,8 +1,8 @@
-import { API_URL } from "../../../config/webpack.config";
+import { API_URL } from "../../../../config/webpack.config";
 
 export const deleteProduct = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/api/product/${id}`, {
+        const response = await fetch(`${API_URL}/api/products/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

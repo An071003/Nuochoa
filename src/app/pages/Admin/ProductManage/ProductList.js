@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Table, Spin, Alert, Pagination, Button, Modal } from "antd";
+import { Table, Spin, Alert, Pagination, Button, Modal, Switch } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { getProductList } from "../../../modules/Product/getProductList";
-import { addProduct } from "../../../modules/Product/addProduct";
+import { getProductList } from "../../../modules/Admin/Product/getProductList";
+import { addProduct } from "../../../modules/Admin/Product/addProduct";
+import { toggleFeaturedProduct } from "../../../modules/Admin/Product/toggleFeaturedProduct";
 import AddProductModal from "./partials/AddProductModal";
 import EditProductModal from "./partials/EditProductModal";
-import { editProduct } from "../../../modules/Product/editProduct";
+import { editProduct } from "../../../modules/Admin/Product/editProduct";
+import { deleteProduct } from "../../../modules/Admin/Product/deleteProduct";
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
@@ -43,13 +45,27 @@ export default function ProductList() {
         }).format(price);
     };
 
+    const handleToggleFeatured = async (id) => {
+        try {
+            
+            await toggleFeaturedProduct(id); 
+            const updatedProducts = await getProductList(); 
+            setProducts(updatedProducts);
+        } catch (error) {
+            console.error("Error toggling featured product:", error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDeleteProduct = async (id) => {
         Modal.confirm({
             title: "Are you sure you want to delete this product?",
             content: "This action cannot be undone.",
-            okText: "Yes",
+            okText: "Delete",
             okType: "danger",
-            cancelText: "No",
+            cancelText: "Cancel",
+            centered: true,
             onOk: async () => {
                 try {
                     await deleteProduct(id);
@@ -104,14 +120,23 @@ export default function ProductList() {
             key: "category",
         },
         {
+            title: <span className="text-[#B76E79] font-bold">Featured</span>,
+            dataIndex: "isFeatured",
+            key: "featured",
+            render: (isFeatured, record) => (
+                <Switch
+                    checked={isFeatured}
+                    onChange={() => handleToggleFeatured(record._id)}
+                />
+            ),
+        },
+        {
             title: <span className="text-[#B76E79] font-bold">Action</span>,
             key: "action",
             render: (_, record) => (
                 <div className="flex gap-2">
-                    {/* Nút Edit */}
                     <div
                         className="cursor-pointer text-sky-400 hover:text-sky-400 underline"
-                        type="link"
                         onClick={() => {
                             setEditingProduct(record);
                             setIsEditModalVisible(true);
@@ -119,25 +144,21 @@ export default function ProductList() {
                     >
                         Edit
                     </div>
-                    {/* Nút Delete */}
                     <div
                         className="cursor-pointer text-rose-400 hover:text-rose-500 underline"
-                        type="link"
-                        danger
                         onClick={() => handleDeleteProduct(record._id)}
                     >
                         Delete
                     </div>
                 </div>
             ),
-        }
-
+        },
     ];
 
     if (loading)
         return (
             <div className="h-screen flex justify-center items-center bg-[#F5F5F5]">
-                <Spin tip="Loading products..." />
+                <Spin tip="Loading products..." ><div/></Spin>
             </div>
         );
     if (error)
@@ -207,7 +228,6 @@ export default function ProductList() {
                 }}
                 product={editingProduct}
             />
-
         </div>
     );
 }

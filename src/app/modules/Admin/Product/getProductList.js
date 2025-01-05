@@ -1,4 +1,4 @@
-import { API_URL } from "../../../config/webpack.config";
+import { API_URL } from "../../../../config/webpack.config";
 
 export const getProductList = async () => {
     try {
