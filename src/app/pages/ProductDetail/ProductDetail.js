@@ -25,6 +25,7 @@ export default function ProductDetail() {
         if (!response.ok) {
           throw new Error("Failed to fetch product details");
         }
+
         const data = await response.json();
         setProduct(data);
 
@@ -43,7 +44,7 @@ export default function ProductDetail() {
 
   const addToCart = async () => {
     try {
-      const cookie = await fetch("http://localhost:5001/api/auth/verify-token", {
+      const cookie = await fetch(`${API_URL}/api/auth/verify-token`, {
         method: "GET", 
         credentials: "include", 
       });
@@ -51,11 +52,11 @@ export default function ProductDetail() {
       if (!cookie.ok) {
         throw new Error("Token không hợp lệ hoặc đã hết hạn.");
       }
-
+      console.log(cookie)
       const data = await cookie.json();
       console.log("Xác thực thành công:", data);
 
-      const response = await fetch("http://localhost:5001/api/cart", {
+      const response = await fetch(`${API_URL}/api/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -26,18 +26,15 @@ const UserPage = () => {
     }
   };
 
-  // Gọi fetchUserProfile khi UserPage được render
   useEffect(() => {
     console.log("success")
     if (!user) {
       fetchUserProfile();
     }
-  }, []); // Chỉ gọi một lần khi component mount
+  }, []);
 
   const [editingField, setEditingField] = useState(null);
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
 
   const handleSave = async (field) => {
     try {

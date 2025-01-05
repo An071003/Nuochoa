@@ -30,7 +30,6 @@ export default function SearchResults() {
     if (option === "all") {
       setFilteredProducts(products);
     } else if (option === "featured") {
-      // Example filter, assuming we have a `bestseller` field in the product data
       setFilteredProducts(products.filter((product) => product.isFeatured));
     } else if (option === "inStock") {
       setFilteredProducts(products.filter((product) => product.countInStock > 0));
