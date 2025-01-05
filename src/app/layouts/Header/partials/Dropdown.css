@@ -1,0 +1,12 @@
+.custom-dropdown .ant-dropdown-menu {
+    min-width: 150px;
+}
+  
+.custom-dropdown .ant-dropdown-menu-item {
+    padding: 8px 16px;
+}
+  
+.custom-dropdown .ant-dropdown-menu-item:hover {
+    background-color: #f0f0f0;
+}
+  
