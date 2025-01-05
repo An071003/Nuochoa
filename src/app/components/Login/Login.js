@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icons
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config/webpack.config";
 import ErrorModal from "../errorbox/errorbox";
 
@@ -39,7 +39,6 @@ export default function Login() {
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("userRole", result.role);
         if(result.role === "admin") {
           navigate("/admin/dashboard");
         }else{

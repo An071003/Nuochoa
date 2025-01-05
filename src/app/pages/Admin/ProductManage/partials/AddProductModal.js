@@ -73,6 +73,7 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
             <Form.Item
               name="brand"
               label={<span className="font-semibold text-gray-600">Brand</span>}
+              rules={[{ required: true, message: "Please input the product brand!" }]}
             >
               <Input />
             </Form.Item>

@@ -62,7 +62,7 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }) {
           </div>
         </td>
         <td className="p-3 max-w-20 min-w-[80px] text-center">
-          {product.price ? (product.price * product.quantity).toLocaleString() : '0₫'}
+          {product.price ? (product.price * product.quantity).toLocaleString() + '₫' : '0₫'}
         </td>
         <td className="p-3">
           <button

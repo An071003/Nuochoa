@@ -47,7 +47,6 @@ export default function ProductList() {
 
     const handleToggleFeatured = async (id) => {
         try {
-            
             await toggleFeaturedProduct(id); 
             const updatedProducts = await getProductList(); 
             setProducts(updatedProducts);
@@ -118,6 +117,16 @@ export default function ProductList() {
             title: <span className="text-[#B76E79] font-bold">Category</span>,
             dataIndex: "category",
             key: "category",
+        },
+        {
+            title: <span className="text-[#B76E79] font-bold">brand</span>,
+            dataIndex: "brand",
+            key: "brand",
+        }, 
+        {
+            title: <span className="text-[#B76E79] font-bold">countInStock</span>,
+            dataIndex: "countInStock",
+            key: "countInStock",
         },
         {
             title: <span className="text-[#B76E79] font-bold">Featured</span>,

@@ -45,24 +45,20 @@ const CategoryPage = () => {
     setFilteredProducts(sortedProducts);
   };
 
-  // Apply Filtering
   const filterProducts = (option) => {
     if (option === "all") {
       setFilteredProducts(products);
     } else if (option === "featured") {
       setFilteredProducts(products.filter((product) => product.isFeatured));
     } else if (option === "inStock") {
-      // Assuming there's an `inStock` property in the product data
-      setFilteredProducts(products.filter((product) => product.inStock));
+      setFilteredProducts(products.filter((product) => product.countInStock));
     }
   };
 
-  // Run fetchProductsByCategory whenever the category changes
   useEffect(() => {
     fetchProductsByCategory();
   }, [category]);
 
-  // Reapply sorting and filtering when the respective options change
   useEffect(() => {
     sortProducts(sortOption);
   }, [sortOption]);
