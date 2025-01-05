@@ -4,13 +4,13 @@ import { API_URL } from "../../../config/webpack.config";
 import ProductCard from "../../components/ProductCard/ProductCard";
 
 const CategoryPage = () => {
-  const { category } = useParams(); // Get the category from the URL
-  const [products, setProducts] = useState([]); // Store the products
-  const [filteredProducts, setFilteredProducts] = useState([]); // Store the filtered/sorted products
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const [sortOption, setSortOption] = useState("newest"); // Sort by default to newest
-  const [filterOption, setFilterOption] = useState("all"); // Filter by default to show all
+  const { category } = useParams();
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [sortOption, setSortOption] = useState("newest");
+  const [filterOption, setFilterOption] = useState("all");
 
   // Fetch products by category from the API
   const fetchProductsByCategory = async () => {

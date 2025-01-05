@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import ConfirmPopup from "../../components/confirmpopup"; // Đảm bảo đường dẫn đúng
+import ConfirmPopup from "../../components/confirmpopup"; 
 
 export default function CartItem({ product, onRemove, onUpdateQuantity }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -12,9 +12,8 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }) {
   };
 
   const handleQuantityChange = async (newQuantity) => {
-    if (newQuantity < 1) return; // Không giảm số lượng xuống dưới 1
+    if (newQuantity < 1) return;
     try {
-      // Gọi hàm cập nhật số lượng và truyền id cùng với số lượng mới
       onUpdateQuantity(product._idCartItem, newQuantity);
     } catch (error) {
       console.error("Error updating quantity:", error);
@@ -49,14 +48,14 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }) {
           <div className="flex items-center">
             <button
               className="px-2 py-1 border"
-              onClick={() => handleQuantityChange(product.quantity - 1)} // Giảm số lượng
+              onClick={() => handleQuantityChange(product.quantity - 1)}
             >
               -
             </button>
             <span className="px-3 min-w-[50px] text-center">{product.quantity}</span>
             <button
               className="px-2 py-1 border"
-              onClick={() => handleQuantityChange(product.quantity + 1)} // Tăng số lượng
+              onClick={() => handleQuantityChange(product.quantity + 1)}
             >
               +
             </button>

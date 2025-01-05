@@ -7,10 +7,10 @@ import ErrorModal from "../errorbox/errorbox";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
-  const [rememberMe, setRememberMe] = useState(false); // Remember Me state
-  const [error, setError] = useState(""); // For error message
-  const [loading, setLoading] = useState(false); // For loading state
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -32,8 +32,8 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // Send email and password
-        credentials: "include", // Important: This ensures cookies are sent and received
+        body: JSON.stringify({ email, password }), 
+        credentials: "include",
       });
 
       const result = await response.json();
@@ -55,9 +55,8 @@ export default function Login() {
     }
   };
 
-  // Close the error modal
   const handleCloseModal = () => {
-    setError(""); // Reset error when closing modal
+    setError("");
   };
 
   // Navigate to the signup page

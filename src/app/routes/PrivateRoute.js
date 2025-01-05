@@ -3,24 +3,22 @@ import { Navigate } from "react-router-dom";
 import { checkAuth } from "../modules/VerifyToken/VerifyToken"; // Import hàm kiểm tra token
 
 const PrivateRoute = ({ element, roles = [] }) => {
-  const [userRole, setUserRole] = useState(null); // Lưu trữ role của người dùng
-  const [loading, setLoading] = useState(true); // Trạng thái loading
-
+  const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const authenticateUser = async () => {
       try {
-        await checkAuth(setUserRole); // Kiểm tra xác thực người dùng và cập nhật role
+        await checkAuth(setUserRole);
       } catch (error) {
         console.error("Lỗi khi xác thực:", error.message);
       } finally {
-        setLoading(false); // Đã xong quá trình xác thực
+        setLoading(false);
       }
     };
 
     authenticateUser();
   }, []);
 
-  // Nếu đang loading, hiển thị loading spinner hoặc thông báo
   if (loading) {
     return <div>Loading...</div>;
   }

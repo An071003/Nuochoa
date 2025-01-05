@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaBoxOpen, FaTags, FaUsers, FaShoppingCart } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
+import logoutAcc from "../../modules/Logout/logoutAcc";
 
 export default function SidebarAdmin() {
   const location = useLocation();
@@ -13,8 +14,17 @@ export default function SidebarAdmin() {
     navigate(path);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutAcc();
+      navigate("/login");
+    } catch (error) {
+      console.error("Failed to logout:", error.message);
+    }
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-[#2C2C2C] text-[#FFF6E3]">
+    <div className="flex flex-col fixed top-0 left-0 bottom-0 w-64 bg-[#2C2C2C] text-[#FFF6E3] z-50">
       <div
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="mb-5 border bg-[#FFF6E3] h-16 flex items-center cursor-pointer"
@@ -91,6 +101,7 @@ export default function SidebarAdmin() {
       </ul>
 
       <div
+        onClick={handleLogout}
         className="flex items-center pl-5 w-full h-12 mb-6 cursor-pointer hover:text-rose-500 hover:border-r-4 hover:border-rose-500 text-[#D4D4D4]"
       >
         <IoLogOut className="mr-2" />

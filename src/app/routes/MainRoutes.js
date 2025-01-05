@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 // Các component
 import CategoryPage from "../components/CategoryPage";
@@ -24,66 +24,92 @@ import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
 import UserPage from "../pages/UserPage";
 import PrivateRoute from "./PrivateRoute";
-import AdminRoute from "./AdminRoute";
+import SearchResults from "../components/SearchResults/SearchResults";
 
-// Routes chính
 const MainRoutes = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Các route không yêu cầu authentication */}
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/confirm" element={<ConfirmPopup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/reset-password/success" element={<PasswordChangeSuccess />} />
-
-        {/* Các route cần bảo vệ */}
-        <Route element={<UserLayout />}>
-          {/* Trang chủ */}
-          <Route path="/" element={<Home />} />
-
-          {/* Các route bảo vệ */}
-          <Route
-            path="/category/:category"
-            element={<PrivateRoute element={<CategoryPage />} roles={["customer"]} />}
-          />
-          <Route
-            path="/product/:id"
-            element={<PrivateRoute element={<ProductDetail />} roles={["customer"]} />}
-          />
-          <Route
-            path="/cart"
-            element={<PrivateRoute element={<Cart />} roles={["customer"]} />}
-          />
-          <Route
-            path="/checkout/info"
-            element={<PrivateRoute element={<CheckoutInfo />} roles={["customer"]} />}
-          />
-          <Route
-            path="/checkout/payment"
-            element={<PrivateRoute element={<CheckoutPayment />} roles={["customer"]} />}
-          />
-          <Route
-            path="/user"
-            element={<PrivateRoute element={<UserPage />} roles={["customer"]} />}
-          />
-        </Route>
-
-        {/* Route dành cho admin */}
-        <Route path="/admin" element={<AdminRoute element={<AdminLayout />}/>}>
-          <Route path="product" element={<AdminRoute element={<ProductList />} />} />
-          <Route path="dashboard" element={<AdminRoute element={<Dashboard />} />} />
-          <Route path="coupons" element={<AdminRoute element={<Coupons />} />} />
-          <Route path="user" element={<AdminRoute element={<UserList />} />} />
-          <Route path="order" element={<AdminRoute element={<OrderList />} />} />
-        </Route>
-
-        {/* Route không tồn tại */}
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+      <RoutesWrapper />
     </BrowserRouter>
+  );
+};
+
+const RoutesWrapper = () => {
+  const location = useLocation();
+  return (
+    <Routes>
+      {/* Các route không yêu cầu authentication */}
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/confirm" element={<ConfirmPopup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/reset-password/success" element={<PasswordChangeSuccess />} />
+
+
+      {/* Các route cần bảo vệ */}
+      <Route element={<UserLayout />}>
+        {/* Trang chủ */}
+        <Route path="/" element={<Home />} />
+
+        {/* Các route bảo vệ */}
+        <Route
+          path="/search-results"
+          element={<PrivateRoute element={<SearchResults />} roles={["customer"]} />}
+        />
+        <Route
+          path="/category/:category"
+          element={<PrivateRoute key={location.pathname} element={<CategoryPage />} roles={["customer"]} />}
+        />
+        <Route
+          path="/product/:id"
+          element={<PrivateRoute key={location.pathname} element={<ProductDetail />} roles={["customer"]} />}
+        />
+        <Route
+          path="/cart"
+          element={<PrivateRoute key={location.pathname} element={<Cart />} roles={["customer"]} />}
+        />
+        <Route
+          path="/checkout/info"
+          element={<PrivateRoute key={location.pathname} element={<CheckoutInfo />} roles={["customer"]} />}
+        />
+        <Route
+          path="/checkout/payment"
+          element={<PrivateRoute key={location.pathname} element={<CheckoutPayment />} roles={["customer"]} />}
+        />
+        <Route
+          path="/user"
+          element={<PrivateRoute key={location.pathname} element={<UserPage />} roles={["customer"]} />}
+        />
+      </Route>
+
+      {/* Route dành cho admin */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route
+          path="product"
+          element={<PrivateRoute key={location.pathname} element={<ProductList />} roles={["admin"]} />}
+        />
+        <Route
+          path="dashboard"
+          element={<PrivateRoute key={location.pathname} element={<Dashboard />} roles={["admin"]} />}
+        />
+        <Route
+          path="coupons"
+          element={<PrivateRoute key={location.pathname} element={<Coupons />} roles={["admin"]} />}
+        />
+        <Route
+          path="user"
+          element={<PrivateRoute key={location.pathname} element={<UserList />} roles={["admin"]} />}
+        />
+        <Route
+          path="order"
+          element={<PrivateRoute key={location.pathname} element={<OrderList />} roles={["admin"]} />}
+        />
+      </Route>
+
+      {/* Route không tồn tại */}
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
   );
 };
 

@@ -2,7 +2,7 @@ import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CartItem from "../../components/CartItem/CartItem";
-
+import {API_URL} from "../../../config/webpack.config"
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ export default function Cart() {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/cart", {
+        const response = await fetch(`${API_URL}/api/cart`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export default function Cart() {
     };
 
     fetchCartItems();
-  }, [navigate]);
+  }, [cartItems]);
 
   const handleUpdateQuantity = async (id, newQuantity) => {
     try {
@@ -79,6 +79,7 @@ export default function Cart() {
 
       const updatedCart = await response.json();
       setCartItems(updatedCart);
+      console.log(updatedCart)
     } catch (err) {
       message.error("Có lỗi xảy ra khi xóa sản phẩm.");
     }
