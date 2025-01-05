@@ -53,7 +53,7 @@ const CategoryPage = () => {
       setFilteredProducts(products.filter((product) => product.isFeatured));
     } else if (option === "inStock") {
       // Assuming there's an `inStock` property in the product data
-      setFilteredProducts(products.filter((product) => product.inStock));
+      setFilteredProducts(products.filter((product) => product.countInStock));
     }
   };
 

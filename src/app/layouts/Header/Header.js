@@ -5,6 +5,7 @@ import Logo from "../../assets/image/resized_image_5_3.png";
 import NewDropdown from "./partials/NewDropdown";
 import logoutAcc from "../../modules/Logout/logoutAcc";
 import { API_URL } from "../../../config/webpack.config";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 function Header() {
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -13,6 +14,7 @@ function Header() {
   const navigate = useNavigate();
   const isLoggedIn = true;
 
+  // Chuyển đến trang User hoặc Login
   const handleUserClick = () => {
     if (isLoggedIn) {
       navigate("/user");
@@ -21,6 +23,7 @@ function Header() {
     }
   };
 
+  // Xử lý đăng xuất
   const handleLogout = async () => {
     try {
       await logoutAcc();
@@ -30,10 +33,11 @@ function Header() {
     }
   };
 
+  // Xử lý khi người dùng nhập từ khóa
   const handleSearch = async (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
-    
+
     if (keyword.length >= 1) {
       try {
         const response = await fetch(`${API_URL}/api/products/search?keyword=${keyword}`);
@@ -42,13 +46,14 @@ function Header() {
         setSuggestions(data.products);
       } catch (error) {
         console.error("Lỗi tìm kiếm:", error.message);
+        setSuggestions([]);
       }
     } else {
       setSuggestions([]);
     }
   };
 
-  // Khi người dùng nhấn Enter
+  // Xử lý khi người dùng nhấn Enter
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchKeyword.trim()) {
@@ -60,12 +65,14 @@ function Header() {
     }
   };
 
+  // Xử lý khi người dùng click vào một gợi ý
   const handleSuggestionClick = (productId) => {
     setSearchKeyword("");
     setSuggestions([]);
     navigate(`/product/${productId}`);
   };
 
+  // Menu Dropdown (User Profile / Logout)
   const menuItems = [
     {
       key: "1",
@@ -94,66 +101,11 @@ function Header() {
   return (
     <header className="bg-[#FFF6E3] text-[#283149] sticky top-0 z-50">
       <div className="container mx-auto flex justify-center gap-40 items-center">
+        {/* Logo */}
         <Link to="/" target="_top" className="flex items-center">
           <img src={Logo} alt="Logo" className="max-h-[100px] object-contain" />
         </Link>
-
-        {/* Thanh tìm kiếm */}
-        <form className="relative w-[600px]" onSubmit={handleSearchSubmit}>
-          <div className="flex justify-around items-center bg-white rounded-full px-3 py-1 border border-[#283149]">
-            <input
-              type="text"
-              placeholder="Nhập từ khóa tìm kiếm..."
-              className="flex-grow text-black text-sm px-2 py-1 rounded-l-full focus:outline-none"
-              value={searchKeyword}
-              onChange={handleSearch}
-            />
-            <button
-              type="submit"
-              className="text-[#283149] text-2xl px-3 hover:text-opacity-80"
-            >
-              <CiSearch />
-            </button>
-          </div>
-
-          {/* Danh sách gợi ý */}
-          {searchKeyword.length > 1 && (
-            <div className="absolute bg-white border border-gray-300 rounded-md w-full mt-1 max-h-60 overflow-y-auto shadow-lg z-10">
-              {suggestions.length > 0 ? (
-                <ul>
-                  {suggestions.map((product) => (
-                    <li
-                      key={product._id}
-                      onClick={() => handleSuggestionClick(product._id)}
-                      className="p-2 cursor-pointer hover:bg-gray-100"
-                    >
-                      {product.name} - {product.brand}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="p-2 text-center text-gray-500">Không có sản phẩm nào.</p>
-              )}
-            </div>
-          )}
-
-          {/* Danh mục phổ biến (ẩn khi có gợi ý) */}
-          {!searchKeyword || suggestions.length === 0 ? (
-            <div className="absolute bottom-[-30px] left-0 w-full flex justify-center space-x-4 pt-2 text-sm">
-              <Link to="/category/Nước hoa nam" className="hover:underline cursor-pointer">
-                Nước hoa nam
-              </Link>
-              <Link to="/category/Nước hoa nữ" className="hover:underline cursor-pointer">
-                Nước hoa nữ
-              </Link>
-              <Link to="/category/Nước unisex" className="hover:underline cursor-pointer">
-                Nước unisex
-              </Link>
-            </div>
-          ) : null}
-        </form>
-
-        {/* Dropdown và giỏ hàng */}
+        <SearchBar />
         <div className="flex items-center space-x-4 relative">
           <NewDropdown
             menuItems={menuItems}
@@ -172,13 +124,6 @@ function Header() {
           </Link>
         </div>
       </div>
-
-      {/* Hiển thị thông báo lỗi nếu có */}
-      {error && (
-        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white py-2 text-center">
-          {error}
-        </div>
-      )}
     </header>
   );
 }
