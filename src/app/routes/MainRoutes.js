@@ -55,7 +55,7 @@ const RoutesWrapper = () => {
         {/* Các route bảo vệ */}
         <Route
           path="/search-results"
-          element={<PrivateRoute element={<SearchResults />} roles={["customer"]} />}
+          element={<PrivateRoute key={location.pathname} element={<SearchResults />} roles={["customer"]} />}
         />
         <Route
           path="/category/:category"

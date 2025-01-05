@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import banner from "../../../assets/image/b35a903a-8121-42e8-881d-207164d0bd99.jpg";
 
 export default function Carousel() {
     const images = [
-        banner,
+        
         "https://maisonduparfumstore.com/cdn/shop/files/z6121264946017_1fb85c45d10571dd866c91d727a394f7.jpg?v=1734923469&width=3000",
     ];
 
