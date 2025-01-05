@@ -2,23 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icon từ react-icons
 import { API_URL } from "../../../config/webpack.config";
-
-// ErrorModal Component
-const ErrorModal = ({ error, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg text-center w-auto">
-        <p className="text-lg font-semibold mb-4 text-red-500">{error}</p>
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
-          onClick={onClose}
-        >
-          OK
-        </button>
-      </div>
-    </div>
-  );
-};
+import ErrorModal from "../errorbox/errorbox";
 
 const ResetPassword = () => {
   const { token } = useParams(); // Token từ URL
@@ -94,7 +78,7 @@ const ResetPassword = () => {
 
       if (response.ok) {
         alert("Mật khẩu đã được đặt lại thành công.");
-        navigate("/login");
+        navigate("/reset-password/success");
       } else {
         setError(result.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
       }

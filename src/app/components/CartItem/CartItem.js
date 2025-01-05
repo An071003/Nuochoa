@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import ConfirmPopup from "../../components/confirmpopup"; // Đảm bảo đường dẫn đúng
+import ConfirmPopup from "../../components/confirmpopup"; 
 
-export default function CartItem({ product, onIncrease, onDecrease, onRemove }) {
+export default function CartItem({ product, onRemove, onUpdateQuantity }) {
   const [showPopup, setShowPopup] = useState(false);
-
   const handleConfirmDelete = (confirm) => {
     if (confirm) {
-      onRemove(product.id);
+      onRemove(product._idCartItem);
     }
     setShowPopup(false);
+  };
+
+  const handleQuantityChange = async (newQuantity) => {
+    if (newQuantity < 1) return;
+    try {
+      onUpdateQuantity(product._idCartItem, newQuantity);
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
   };
 
   return (
@@ -33,31 +41,35 @@ export default function CartItem({ product, onIncrease, onDecrease, onRemove }) 
             </div>
           </div>
         </td>
-        <td className="p-3">{product.price.toLocaleString()}₫</td>
+        <td className="p-3">
+          {product.price ? product.price.toLocaleString() : '0₫'}
+        </td>
         <td className="p-3 w-[100px]">
           <div className="flex items-center">
             <button
               className="px-2 py-1 border"
-              onClick={() => onDecrease(product.id)}
+              onClick={() => handleQuantityChange(product.quantity - 1)}
             >
               -
             </button>
             <span className="px-3 min-w-[50px] text-center">{product.quantity}</span>
             <button
               className="px-2 py-1 border"
-              onClick={() => onIncrease(product.id)}
+              onClick={() => handleQuantityChange(product.quantity + 1)}
             >
               +
             </button>
           </div>
         </td>
-        <td className="p-3 max-w-20 min-w-[80px] text-center">{(product.price * product.quantity).toLocaleString()}₫</td>
+        <td className="p-3 max-w-20 min-w-[80px] text-center">
+          {product.price ? (product.price * product.quantity).toLocaleString() : '0₫'}
+        </td>
         <td className="p-3">
           <button
             className="text-red-500 hover:underline"
             onClick={() => setShowPopup(true)}
           >
-            <MdDelete className="text-[25px] text-[#283149] hover:scale-125" />
+            <MdDelete className="ml-1 text-[25px] text-[#283149] hover:scale-125" />
           </button>
         </td>
       </tr>

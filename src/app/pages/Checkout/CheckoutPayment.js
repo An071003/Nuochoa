@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import CheckoutSummary from "./CheckoutSummary"; // Import CheckoutSummary
+import CheckoutSummary from "./CheckoutSummary"; 
 import Breadcrumb from "./partials/Breadcrumb";
 
 export default function CheckoutPayment() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Nhận dữ liệu từ localStorage hoặc location.state
   const initialCartItems = JSON.parse(localStorage.getItem("cartItems")) || location.state?.cartItems || [];
   const initialFormData = JSON.parse(localStorage.getItem("formData")) || {
     email: "",
@@ -20,30 +18,25 @@ export default function CheckoutPayment() {
   };
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [formData, setFormData] = useState(initialFormData);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" - Thanh toán khi nhận hàng, "QRCode" - Thanh toán qua QR
 
-  // Lưu dữ liệu vào localStorage khi có thay đổi
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [cartItems, formData]);
 
-  // Hàm thay đổi phí Thanh toán
-  const handleShippingChange = (cost) => {
-    setShippingCost(cost);
+  const handlePaymentMethodChange = (method) => {
+    setPaymentMethod(method);
   };
 
-  // Hàm chỉnh sửa thông tin quay lại bước trước
   const handleEditInfo = () => {
     navigate("/checkout/info");
   };
 
-  // Hàm chuyển đến phần thanh toán
   const handleProceedToPayment = () => {
-    navigate("/checkout/payment", { state: { formData, cartItems, shippingCost } });
+    navigate("/checkout/payment", { state: { formData, cartItems, paymentMethod } });
   };
 
-  // Tính tổng giá trị giỏ hàng
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -100,43 +93,31 @@ export default function CheckoutPayment() {
         </table>
 
         {/* Lựa chọn phương thức Thanh toán */}
-        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Thanh toán</h1>
-        <table className="min-w-full table-auto text-sm my-5 border-collapse border">
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2 px-4 text-gray-800 w-fit text-right">
-                <label className="flex items-center font-sans font-bold py-2 text-left">
-                  <input
-                    type="radio"
-                    name="shipping"
-                    className="mr-2"
-                    onChange={() => handleShippingChange(20000)}
-                  />
-                  Giao hàng tiêu chuẩn
-                </label>
-              </td>
-              <td className="p-4 text-right">
-                20,000₫
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 px-4 text-gray-800 w-fit text-right">
-                <label className="flex items-center font-sans font-bold py-2 text-left">
-                  <input
-                    type="radio"
-                    name="shipping"
-                    className="mr-2"
-                    onChange={() => handleShippingChange(50000)}
-                  />
-                  Giao hàng nhanh
-                </label>
-              </td>
-              <td className="p-4 text-right text-">
-                50,000₫
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <h1 className="font-sans text-2xl font-bold mb-4 mt-1">Phương thức Thanh toán</h1>
+        <div className="space-y-4">
+          <div>
+            <input
+              type="radio"
+              id="COD"
+              name="paymentMethod"
+              checked={paymentMethod === "COD"}
+              onChange={() => handlePaymentMethodChange("COD")}
+              className="mr-2"
+            />
+            <label htmlFor="COD" className="font-sans font-bold">Thanh toán khi nhận hàng</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="QRCode"
+              name="paymentMethod"
+              checked={paymentMethod === "QRCode"}
+              onChange={() => handlePaymentMethodChange("QRCode")}
+              className="mr-2"
+            />
+            <label htmlFor="QRCode" className="font-sans font-bold">Thanh toán qua QRCode</label>
+          </div>
+        </div>
 
         {/* Nút chuyển đến phần thanh toán */}
         <div className="flex justify-between mt-6">
@@ -153,7 +134,7 @@ export default function CheckoutPayment() {
               onClick={handleProceedToPayment}
               className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
             >
-              Chuyển đến phần thanh toán
+              Thanh toán
             </button>
           </div>
         </div>
@@ -162,7 +143,6 @@ export default function CheckoutPayment() {
       {/* Phần Summary */}
       <CheckoutSummary
         cartItems={cartItems}
-        shippingCost={shippingCost}
         total={total}
       />
     </div>

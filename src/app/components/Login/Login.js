@@ -2,31 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import icons
 import { API_URL } from "../../../config/webpack.config";
-
-// ErrorModal Component
-const ErrorModal = ({ error, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg text-center w-auto">
-        <p className="text-lg font-semibold mb-4">{error}</p>
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
-          onClick={onClose}
-        >
-          OK
-        </button>
-      </div>
-    </div>
-  );
-};
+import ErrorModal from "../errorbox/errorbox";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
-  const [rememberMe, setRememberMe] = useState(false); // Remember Me state
-  const [error, setError] = useState(""); // For error message
-  const [loading, setLoading] = useState(false); // For loading state
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -48,29 +32,31 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // Send email and password
-        credentials: "include", // Important: This ensures cookies are sent and received
+        body: JSON.stringify({ email, password }), 
+        credentials: "include",
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // If login is successful, redirect to home page or dashboard
-        console.log("Login successful", result);
-        navigate("/"); // Redirect to homepage or dashboard
+        localStorage.setItem("userRole", result.role);
+        if(result.role === "admin") {
+          navigate("/admin/dashboard");
+        }else{
+          navigate("/");
+        }
       } else {
         setError(result.message || "Đăng nhập thất bại. Vui lòng thử lại.");
       }
     } catch (error) {
       setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Close the error modal
   const handleCloseModal = () => {
-    setError(""); // Reset error when closing modal
+    setError("");
   };
 
   // Navigate to the signup page

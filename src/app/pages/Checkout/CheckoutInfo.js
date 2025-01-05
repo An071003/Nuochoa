@@ -7,7 +7,6 @@ export default function CheckoutInfo() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Lấy dữ liệu giỏ hàng từ localStorage hoặc location.state
     const initialCartItems = JSON.parse(localStorage.getItem("cartItems")) || location.state?.cartItems || [];
     const initialFormData = JSON.parse(localStorage.getItem("formData")) || {
         email: "",
@@ -24,7 +23,6 @@ export default function CheckoutInfo() {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        // Lưu cartItems và formData vào localStorage
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
         localStorage.setItem("formData", JSON.stringify(formData));
     }, [cartItems, formData]);
@@ -36,7 +34,7 @@ export default function CheckoutInfo() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        setErrors({ ...errors, [e.target.name]: "" }); // Xóa lỗi khi người dùng nhập lại
+        setErrors({ ...errors, [e.target.name]: "" });
     };
 
     const handleNextStep = () => {
