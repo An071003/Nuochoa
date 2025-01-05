@@ -14,7 +14,7 @@ export default function SidebarAdmin() {
   };
 
   return (
-    <div className="flex flex-col min-h-full min-w-64 bg-[#2C2C2C] text-[#FFF6E3]">
+    <div className="flex flex-col min-h-full bg-[#2C2C2C] text-[#FFF6E3]">
       <div className="sticky top-0">
         <div
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

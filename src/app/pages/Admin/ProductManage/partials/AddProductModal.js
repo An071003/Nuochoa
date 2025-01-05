@@ -22,7 +22,7 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
   return (
     <Modal
       title={null}
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={null}
       centered

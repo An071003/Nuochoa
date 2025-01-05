@@ -16,7 +16,7 @@ export default function EditProductModal({ visible, onClose, onSubmit, product }
     return (
         <Modal
             title={null}
-            visible={visible}
+            open={visible}
             onCancel={onClose}
             footer={null}
             centered
