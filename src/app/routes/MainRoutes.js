@@ -23,6 +23,7 @@ import Dashboard from "../pages/Admin/Dashboard/Dashboard"
 import Coupons from "../pages/Admin/Coupons/Coupons"
 import OrderList from "../pages/Admin/OrderManage/OrderList"
 import UserList from "../pages/Admin/UserManage/UserList"
+import PasswordChangeSuccess from "../components/PasswordChangeSuccess"
 
 const PrivateRoute = ({ element, roles }) => {
   const [userRole, setUserRole] = useState(null);
@@ -116,7 +117,7 @@ const MainRoutes = () => {
         <Route path="/confirm" element={<ConfirmPopup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-
+        <Route path="/reset-password/success" element={<PasswordChangeSuccess />} />
         {/* Các route cần bảo vệ */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />

@@ -78,7 +78,7 @@ const ResetPassword = () => {
 
       if (response.ok) {
         alert("Mật khẩu đã được đặt lại thành công.");
-        navigate("/login");
+        navigate("/reset-password/success");
       } else {
         setError(result.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
       }
