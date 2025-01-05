@@ -38,7 +38,7 @@ export default function Cart() {
 
   const handleUpdateQuantity = async (id, newQuantity) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
+      const response = await fetch(`${API_URL}/api/cart/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ export default function Cart() {
 
   const handleRemove = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/cart/${id}`, {
+      const response = await fetch(`${API_URL}/api/cart/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
