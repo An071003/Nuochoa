@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { checkAuth } from "../modules/VerifyToken/VerifyToken"; // Import hàm kiểm tra token
+import { checkAuth } from "../modules/VerifyToken/VerifyToken";
 
 const PrivateRoute = ({ element, roles = [] }) => {
   const [userRole, setUserRole] = useState(null);

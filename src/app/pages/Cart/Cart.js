@@ -34,6 +34,7 @@ export default function Cart() {
     };
 
     fetchCartItems();
+    console.log(cartItems)
   }, [cartItems]);
 
   const handleUpdateQuantity = async (id, newQuantity) => {

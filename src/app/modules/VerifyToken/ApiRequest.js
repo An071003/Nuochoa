@@ -1,12 +1,10 @@
 import { API_URL } from "../../../config/webpack.config";
 
-export const ApiRequest = async (url, options = {}) => {
+export const ApiRequest = async (url = {}) => {
     let response = await fetch(url, {
-        ...options,
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
-            ...options.headers,
         },
     });
     
@@ -17,12 +15,11 @@ export const ApiRequest = async (url, options = {}) => {
         });
 
         if (refreshResponse.ok) {
+            console.log(1)
             response = await fetch(url, {
-                ...options,
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    ...options.headers,
                 },
             });
         } else {
