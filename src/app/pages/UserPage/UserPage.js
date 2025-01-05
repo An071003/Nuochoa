@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../../config/webpack.config";
 import { message } from "antd";
+import { getUserProfile, updateUserProfile, sendPasswordResetEmail } from "../../modules/UserPageApi/UserPageApi";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
@@ -10,21 +10,12 @@ const UserPage = () => {
 
   const navigate = useNavigate();
 
-  const getUserProfile = async () => {
+  const fetchUserProfile = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/profile`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Lỗi khi lấy thông tin người dùng. Vui lòng thử lại.");
-      }
-
-      const result = await response.json();
+      const result = await getUserProfile();
       setUser(result);
     } catch (error) {
       setError(error.message);
@@ -35,10 +26,11 @@ const UserPage = () => {
     }
   };
 
-  // Gọi getUserProfile khi UserPage được render
+  // Gọi fetchUserProfile khi UserPage được render
   useEffect(() => {
+    console.log("success")
     if (!user) {
-      getUserProfile();
+      fetchUserProfile();
     }
   }, []); // Chỉ gọi một lần khi component mount
 
@@ -47,52 +39,28 @@ const UserPage = () => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
 
-  const updateUserProfile = async (updatedData) => {
-    try {
-      const response = await fetch(`${API_URL}/api/users/profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(updatedData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Lỗi cập nhật thông tin.");
-      }
-
-      const result = await response.json();
-      setUser(result.user);
-    } catch (error) {
-      console.error("Error in updateUserProfile:", error.message);
-    }
-  };
-
-  // Lưu thông tin chỉnh sửa
   const handleSave = async (field) => {
     try {
       const updatedData = { [field]: user[field] };
-      await updateUserProfile(updatedData);
+      const result = await updateUserProfile(updatedData);
+      setUser(result.user);
       setEditingField(null);
     } catch (error) {
       console.error("Cập nhật thông tin thất bại:", error.message);
     }
   };
 
-  // Lưu avatar
   const handleAvatarSave = async () => {
     try {
       const updatedData = { avatar: user.avatar };
-      await updateUserProfile(updatedData);
+      const result = await updateUserProfile(updatedData);
+      setUser(result.user);
       setIsEditingAvatar(false);
     } catch (error) {
       console.error("Cập nhật avatar thất bại:", error.message);
     }
   };
 
-  // Xử lý thay đổi avatar
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -106,22 +74,8 @@ const UserPage = () => {
 
   const handleChangePassword = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: user.email }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        const successMessage = "Đã gửi email hướng dẫn đổi mật khẩu!";
-        message.success(successMessage);
-      } else {
-        throw new Error("Đã có lỗi xảy ra. Vui lòng thử lại.");
-      }
+      const result = await sendPasswordResetEmail(user.email);
+      message.success("Đã gửi email hướng dẫn đổi mật khẩu!");
     } catch (err) {
       message.error(err.message);
     }
@@ -130,6 +84,7 @@ const UserPage = () => {
   if (!user) {
     return null;
   }
+
   const handleCloseModal = () => {
     setError("");
   };
@@ -142,7 +97,6 @@ const UserPage = () => {
         Thông Tin Người Dùng
       </h1>
       <div className="bg-white shadow-lg rounded-lg p-6 min-w-[60%] max-w-[60%] mx-auto px-28">
-
         {/* Avatar */}
         <div className="mb-4 text-center">
           <img
@@ -197,7 +151,7 @@ const UserPage = () => {
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold text-[#283149]">{user[field] || "Chưa cập nhật"}</p>
+                <p className="text-lg font-semibold text-[#283149]">{user[field]}</p>
                 <button
                   onClick={() => setEditingField(field)}
                   className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
@@ -213,75 +167,19 @@ const UserPage = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-[#283149]">Email</label>
           <div className="flex items-center justify-between">
-            <p className="text-lg font-semibold">{user.email || "Chưa cập nhật"}</p>
+            <p className="text-lg font-semibold text-[#283149]">{user.email}</p>
           </div>
         </div>
 
         {/* Đổi mật khẩu */}
-        <div className="mb-6">
-          <label className="block text-sm font-sans text-[#283149]">Đổi mật khẩu</label>
-          {isEditingPassword ? (
-            <div className="space-y-4">
-              <input
-                type="password"
-                name="currentPassword"
-                value={passwords.currentPassword}
-                onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
-                placeholder="Mật khẩu hiện tại"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              <input
-                type="password"
-                name="newPassword"
-                value={passwords.newPassword}
-                onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
-                placeholder="Mật khẩu mới"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              <button
-                onClick={() => {
-                  setIsEditingPassword(false);
-                  console.log("Mật khẩu đã đổi:", passwords);
-                }}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
-              >
-                Lưu mật khẩu
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => handleChangePassword()}
-              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
-            >
-              Đổi mật khẩu
-            </button>
-          )}
-        </div>
-
-        {/* Lịch sử đặt hàng */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Lịch sử đặt hàng</label>
-          <div className="bg-gray-100 p-4 rounded-lg max-h-48 overflow-y-auto">
-            {user?.orders?.length > 0 ? (
-              <ul className="list-disc pl-5">
-                {user.orders.map((order, index) => (
-                  <li key={index} className="mb-2">
-                    <p className="text-sm">
-                      <strong>Order ID:</strong> {order._id}
-                    </p>
-                    <p className="text-sm">
-                      <strong>Ngày đặt:</strong> {new Date(order.createdAt).toLocaleString()}
-                    </p>
-                    <p className="text-sm">
-                      <strong>Tổng tiền:</strong> {order.totalPrice} VND
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">Không có lịch sử đặt hàng.</p>
-            )}
-          </div>
+        <div className="mb-6 mt-8 flex justify-between items-center">
+          <label className="text-lg font-semibold text-[#283149]">Đổi mật khẩu</label>
+          <button
+            onClick={() => handleChangePassword()}
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition duration-200"
+          >
+            Đổi mật khẩu
+          </button>
         </div>
       </div>
     </div>
