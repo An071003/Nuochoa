@@ -25,6 +25,7 @@ import ProductDetail from "../pages/ProductDetail";
 import UserPage from "../pages/UserPage";
 import PrivateRoute from "./PrivateRoute";
 import SearchResults from "../pages/SearchResults";
+import VerifyEmail from "../components/VerifyEmail"
 
 const MainRoutes = () => {
   return (
@@ -45,7 +46,7 @@ const RoutesWrapper = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/reset-password/success" element={<PasswordChangeSuccess />} />
-
+      <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
       {/* Các route cần bảo vệ */}
       <Route element={<UserLayout />}>

@@ -8,7 +8,7 @@ const SuccessModal = ({ message, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg text-center w-auto">
-        <p className="text-lg font-semibold mb-4 text-green-500">{message}</p>
+        <p className="text-lg font-sans mb-4 text-green-500">{message}</p>
         <button
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
           onClick={onClose}
@@ -55,19 +55,20 @@ export default function Signup() {
       setLoading(false);
       return;
     }
+
     try {
-      const response = await fetch(`${API_URL}/api/auth/signup`, {
+      const response = await fetch(`${API_URL}/api/auth/check-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }), 
+        body: JSON.stringify({ name, email, password }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        setSuccess("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
+        setSuccess("Đã gửi mã xác thực email. Vui lòng kiểm tra hộp thư của bạn.");
       } else {
         setError(result.message || "Đăng ký thất bại. Vui lòng thử lại.");
       }
@@ -83,8 +84,8 @@ export default function Signup() {
   };
 
   const handleCloseSuccessModal = () => {
-    setSuccess(""); 
-    navigate("/login"); 
+    setSuccess("");
+    navigate("/login");
   };
 
   return (
