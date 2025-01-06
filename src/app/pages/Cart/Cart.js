@@ -9,33 +9,32 @@ export default function Cart() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/cart`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+  const fetchCartItems = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/cart`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-        if (!response.ok) {
-          throw new Error("Không thể tải giỏ hàng.");
-        }
-
-        const data = await response.json();
-        setCartItems(data);
-        localStorage.setItem("cartItems", JSON.stringify(data));
-      } catch (err) {
-        setError(err.message);
-        message.error("Có lỗi xảy ra khi tải giỏ hàng.");
+      if (!response.ok) {
+        throw new Error("Không thể tải giỏ hàng.");
       }
-    };
 
+      const data = await response.json();
+      setCartItems(data);
+      localStorage.setItem("cartItems", JSON.stringify(data));
+    } catch (err) {
+      setError(err.message);
+      message.error("Có lỗi xảy ra khi tải giỏ hàng.");
+    }
+  };
+
+  useEffect(() => {
     fetchCartItems();
-    console.log(cartItems)
-  }, [cartItems]);
+  }, []);
 
   const handleUpdateQuantity = async (id, newQuantity) => {
     try {
