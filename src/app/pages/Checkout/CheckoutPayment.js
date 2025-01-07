@@ -40,8 +40,9 @@ export default function CheckoutPayment() {
       setIsLoading(true);
       const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      const response = await fetch(`https://perfume-ecommerce.onrender.com/api/payments/send-invoice`, {
+      const response = await fetch(`${API_URL}/api/payments/send-invoice`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -58,12 +59,13 @@ export default function CheckoutPayment() {
           paymentMethod,
         }),
       });
-      const response1 = await fetch(`https://perfume-ecommerce.onrender.com/api/cart/removecart`, {
-        method: "DELETE",
-        credentials: "include", 
-      });
+      
       if (response.ok) {
         alert("Hóa đơn đã được gửi đến email của bạn!");
+        const response1 = await fetch(`https://perfume-ecommerce.onrender.com/api/cart/removecart`, {
+        method: "DELETE",
+        credentials: "include", 
+        });
         navigate("/purchase-success");
       } else {
         const errorData = await response.json();
