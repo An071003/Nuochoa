@@ -1,3 +1,3 @@
-const API_URL = "http://localhost:5001";
+const API_URL = "https://perfume-ecommerce.onrender.com";
 
 export { API_URL }
