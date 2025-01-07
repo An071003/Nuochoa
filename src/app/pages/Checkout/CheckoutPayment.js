@@ -1,7 +1,9 @@
+// CheckoutPayment.js
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import CheckoutSummary from "./CheckoutSummary"; 
+import CheckoutSummary from "./CheckoutSummary";
 import Breadcrumb from "./partials/Breadcrumb";
+import { API_URL } from "../../../config/webpack.config";
 
 export default function CheckoutPayment() {
   const navigate = useNavigate();
@@ -18,13 +20,14 @@ export default function CheckoutPayment() {
   };
   const [cartItems, setCartItems] = useState(initialCartItems);
   const [formData, setFormData] = useState(initialFormData);
-  const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" - Thanh toán khi nhận hàng, "QRCode" - Thanh toán qua QR
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [cartItems, formData]);
-
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
   };
@@ -32,22 +35,56 @@ export default function CheckoutPayment() {
   const handleEditInfo = () => {
     navigate("/checkout/info");
   };
+  const handleSendInvoice = async () => {
+    try {
+      setIsLoading(true);
+      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleProceedToPayment = () => {
-    navigate("/checkout/payment", { state: { formData, cartItems, paymentMethod } });
+      const response = await fetch(`${API_URL}/api/payments/send-invoice`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          address: formData.address,
+          city: formData.city,
+          postalCode: formData.postalCode,
+          phone: formData.phone,
+          cartItems,
+          total,
+          paymentMethod,
+        }),
+      });
+      const response1 = await fetch(`${API_URL}/api/cart/removecart`, {
+        method: "DELETE",
+        credentials: "include", 
+      });
+      if (response.ok) {
+        alert("Hóa đơn đã được gửi đến email của bạn!");
+        navigate("/purchase-success");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Không thể gửi hóa đơn.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi hóa đơn:", error);
+      alert("Không thể gửi hóa đơn. Vui lòng thử lại.");
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
   const steps = [
     { index: 1, label: "Giỏ hàng", path: "/cart" },
     { index: 2, label: "Thông tin", path: "/checkout/info" },
-    { index: 3, label: "Thanh toán", path: "/checkout/Payment" },
+    { index: 3, label: "Thanh toán", path: "/checkout/payment" },
   ];
-
 
   return (
     <div className="container mx-auto p-14 flex flex-col lg:flex-row lg:space-x-4">
@@ -131,10 +168,10 @@ export default function CheckoutPayment() {
           </div>
           <div className="text-right">
             <button
-              onClick={handleProceedToPayment}
+              onClick={handleSendInvoice}
               className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
             >
-              Thanh toán
+              Hoàn tất đơn hàng
             </button>
           </div>
         </div>
