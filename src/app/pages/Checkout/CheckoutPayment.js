@@ -40,7 +40,7 @@ export default function CheckoutPayment() {
       setIsLoading(true);
       const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      const response = await fetch(`${API_URL}/api/payments/send-invoice`, {
+      const response = await fetch(`https://perfume-ecommerce.onrender.com/api/payments/send-invoice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function CheckoutPayment() {
           paymentMethod,
         }),
       });
-      const response1 = await fetch(`${API_URL}/api/cart/removecart`, {
+      const response1 = await fetch(`https://perfume-ecommerce.onrender.com/api/cart/removecart`, {
         method: "DELETE",
         credentials: "include", 
       });
