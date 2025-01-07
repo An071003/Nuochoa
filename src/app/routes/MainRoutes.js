@@ -26,7 +26,7 @@ import UserPage from "../pages/UserPage";
 import PrivateRoute from "./PrivateRoute";
 import SearchResults from "../pages/SearchResults";
 import VerifyEmail from "../components/VerifyEmail"
-
+import PurchaseSuccess from "../pages/Success/PurchaseSuccess";
 const MainRoutes = () => {
   return (
     <BrowserRouter>
@@ -81,6 +81,10 @@ const RoutesWrapper = () => {
         <Route
           path="/user"
           element={<PrivateRoute key={location.pathname} element={<UserPage />} roles={["customer"]} />}
+        />
+        <Route
+          path="/purchase-success"
+          element={<PrivateRoute key={location.pathname} element={<PurchaseSuccess />} roles={["customer"]} />}
         />
       </Route>
 
