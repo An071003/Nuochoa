@@ -14,7 +14,9 @@ export default function Breadcrumb({ steps, currentStep }) {
             }
             className={`cursor-pointer ${
               currentStep === step.index ? "text-blue-500" : ""
-            }`}
+            } ${step.path && currentStep >= step.index ? "hover:text-blue-700" : "text-gray-400 cursor-not-allowed"}`}
+            role={step.path ? "link" : "none"} // Improve accessibility
+            aria-current={currentStep === step.index ? "page" : undefined} // Improve accessibility
           >
             {step.label}
           </span>
