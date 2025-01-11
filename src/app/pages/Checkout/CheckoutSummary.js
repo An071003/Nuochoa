@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function CheckoutSummary({ cartItems, total }) {
-
   return (
     <div className="w-full lg:w-1/3 bg-gray-100 shadow-md rounded-lg p-6">
       <h2 className="text-lg font-bold mb-4">Sản phẩm trong giỏ hàng</h2>
@@ -28,14 +27,11 @@ export default function CheckoutSummary({ cartItems, total }) {
         ))}
       </ul>
 
-      <table className="w-full mt-6">
-        <tbody>
-          <tr>
-            <td className=" text-lg font-bold">Tổng:</td>
-            <td className="text-right text-lg font-bold">{total.toLocaleString()}₫</td>
-          </tr>
-        </tbody>
-      </table>
+      {/* Total Summary */}
+      <div className="mt-6 flex justify-between items-center">
+        <p className="text-lg font-bold">Tổng:</p>
+        <p className="text-right text-lg font-bold">{total.toLocaleString()}₫</p>
+      </div>
     </div>
   );
 }
