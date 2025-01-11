@@ -3,26 +3,27 @@ import ProductCard from "../../../components/ProductCard/ProductCard";
 import { API_URL } from "../../../../config/webpack.config";
 
 export default function ProductList() {
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch products from the API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${API_URL}/api/products/featured`);
-
+        
         if (!response.ok) {
-          throw new Error("Failed to fetch featured products");
+          throw new Error("Failed to fetch featured products.");
         }
+        
         const data = await response.json();
 
-        // Kiểm tra xem data có phải là mảng không
         if (!Array.isArray(data)) {
-          throw new Error("Invalid data format received");
+          throw new Error("Invalid data format received.");
         }
 
-        // Sắp xếp sản phẩm theo countInStock giảm dần
+        // Sort products based on stock count in descending order
         const sortedProducts = data.sort((a, b) => b.countInStock - a.countInStock);
         setProducts(sortedProducts);
       } catch (err) {
@@ -35,23 +36,22 @@ export default function ProductList() {
     fetchProducts();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl font-semibold text-gray-500">Đang tải sản phẩm nổi bật...</p>
-      </div>
-    );
-  }
+  // Handle loading state
+  const renderLoadingState = () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <p className="text-xl font-semibold text-gray-500">Đang tải sản phẩm nổi bật...</p>
+    </div>
+  );
 
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl font-semibold text-red-500">{error}</p>
-      </div>
-    );
-  }
+  // Handle error state
+  const renderErrorState = () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <p className="text-xl font-semibold text-red-500">{error}</p>
+    </div>
+  );
 
-  return (
+  // Main render when data is fetched
+  const renderProducts = () => (
     <div className="container mx-auto px-4">
       <p className="text-2xl font-semibold text-center text-slate-500 my-8">
         Merry Christmas Xmas | Giảm 8% mọi đơn đặt hàng trên website
@@ -63,4 +63,9 @@ export default function ProductList() {
       </div>
     </div>
   );
+
+  // Conditional rendering based on state
+  if (loading) return renderLoadingState();
+  if (error) return renderErrorState();
+  return renderProducts();
 }
