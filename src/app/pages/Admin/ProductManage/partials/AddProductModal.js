@@ -5,18 +5,22 @@ import { UploadOutlined } from "@ant-design/icons";
 
 export default function AddProductModal({ visible, onClose, onSubmit }) {
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]); // Lưu danh sách ảnh
 
   const handleUpload = async (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file); // Đọc file dưới dạng Base64
     reader.onload = () => {
-      setImage(reader.result); // Lưu Base64 hình ảnh vào state
+      setImages((prev) => [...prev, reader.result]); // Thêm URL ảnh vào danh sách
       message.success("Image selected successfully!");
     };
     reader.onerror = (error) => {
       message.error("Error uploading image: " + error.message);
     };
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index)); // Xóa ảnh khỏi danh sách
   };
 
   return (
@@ -26,24 +30,24 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
       onCancel={onClose}
       footer={null}
       centered
-      width={800} // Tăng chiều rộng modal
+      width="90%" // Responsive width
+      maxWidth={800} // Maximum width for large screens
     >
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-[#B76E79]">Add New Product</h2>
       </div>
       <Form
         layout="vertical"
-        onFinish={(values) => onSubmit({ ...values, description, image })}
+        onFinish={(values) => onSubmit({ ...values, description, images })}
         initialValues={{
           name: "",
           price: 0,
           category: "",
           brand: "",
           countInStock: 0,
-          image: "",
         }}
       >
-        <div className="grid grid-cols-2 gap-x-6">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
           {/* Left Column */}
           <div>
             <Form.Item
@@ -68,6 +72,7 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
               <Input />
             </Form.Item>
           </div>
+
           {/* Right Column */}
           <div>
             <Form.Item
@@ -84,14 +89,8 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
             >
               <InputNumber min={0} className="w-full" />
             </Form.Item>
-            {/* <Form.Item
-              name="image"
-              label={<span className="font-semibold text-gray-600">Image URL</span>}
-            >
-              <Input />
-            </Form.Item> */}
             <Form.Item
-              label={<span className="font-semibold text-gray-600">Upload Image</span>}
+              label={<span className="font-semibold text-gray-600">Upload Images</span>}
             >
               <Upload
                 beforeUpload={(file) => {
@@ -102,14 +101,25 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
               >
                 <Button icon={<UploadOutlined />}>Upload Image</Button>
               </Upload>
-              {image && (
-                <div className="mt-3">
-                  <img src={image} alt="Uploaded" className="max-h-40 rounded-md" />
-                </div>
-              )}
+              <div className="mt-3 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {images.map((img, index) => (
+                  <div key={index} className="relative">
+                    <img src={img} alt={`Uploaded ${index}`} className="max-h-24 rounded-md" />
+                    <Button
+                      type="text"
+                      danger
+                      className="absolute top-1 right-1"
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </Form.Item>
           </div>
         </div>
+
         <Form.Item
           label={<span className="font-semibold text-gray-600">Description</span>}
         >
@@ -117,8 +127,10 @@ export default function AddProductModal({ visible, onClose, onSubmit }) {
             value={description}
             onChange={setDescription}
             height={200}
+            className="w-full" // Ensure the editor is responsive
           />
         </Form.Item>
+
         <Form.Item className="flex justify-center">
           <Button type="primary" htmlType="submit">
             Add Product
