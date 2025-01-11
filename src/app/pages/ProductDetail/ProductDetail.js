@@ -1,152 +1,201 @@
-import { message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CartItem from "../../components/CartItem/CartItem";
+import { useNavigate, useParams } from "react-router-dom";
+import Slider from "react-slick";
+import { message } from "antd";
 import { API_URL } from "../../../config/webpack.config";
+import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 
-export default function Cart() {
-  const [cartItems, setCartItems] = useState([]);
-  const [error, setError] = useState(null);
+const Arrow = ({ className, style, onClick, direction }) => (
+  <button
+    style={{
+      ...style,
+      color: "gray", 
+      border: "none", 
+      padding: "0", 
+      background: "transparent",
+      position: "absolute", 
+      top: "45%", 
+      transform: "translateY(-50%)", 
+      left: direction === "left" ? "-40px" : "auto", 
+      right: direction === "right" ? "-40px" : "auto", 
+      outline: "none",
+    }}
+    onClick={onClick}
+  >
+    {direction === "left" ? <SlArrowLeft size={50} /> : <SlArrowRight size={50} />}
+  </button>
+);
+
+export default function ProductDetail() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [nav1, setNav1] = useState(null);
+  const [nav2, setNav2] = useState(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const fetchCartItems = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/cart`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Không thể tải giỏ hàng.");
-      }
-
-      const data = await response.json();
-      setCartItems(data);
-      localStorage.setItem("cartItems", JSON.stringify(data));
-    } catch (err) {
-      setError(err.message);
-      message.error("Có lỗi xảy ra khi tải giỏ hàng.");
-    }
-  };
-
+  // Fetch the product details
   useEffect(() => {
-    fetchCartItems();
-  }, []);
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/products/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch product details");
+        }
+        const data = await response.json();
+        setProduct(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleUpdateQuantity = async (id, newQuantity) => {
+    fetchProduct();
+  }, [id]);
+
+  // Quantity increment and decrement
+  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const decreaseQuantity = () => quantity > 1 && setQuantity((prev) => prev - 1);
+
+  // Add product to cart
+  const addToCart = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/cart/${id}`, {
-        method: "PUT",
+      const cookie = await fetch(`${API_URL}/api/auth/verify-token`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!cookie.ok) {
+        throw new Error("Token không hợp lệ hoặc đã hết hạn.");
+      }
+
+      const response = await fetch(`${API_URL}/api/cart`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({
-          quantity: newQuantity,
+          productId: id,
+          quantity,
         }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Không thể cập nhật số lượng.");
-      }
-
-      const updatedCart = await response.json();
-      setCartItems(updatedCart);
-      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-      message.error("Có lỗi xảy ra khi cập nhật số lượng.");
-    }
-  };
-
-  const handleRemove = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/api/cart/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error("Không thể xóa sản phẩm");
+        throw new Error("Không thể thêm sản phẩm vào giỏ hàng");
       }
 
-      const updatedCart = await response.json();
-      setCartItems(updatedCart);
+      message.success(
+        `Đã thêm ${quantity} sản phẩm ${product.name} vào giỏ hàng!`
+      );
     } catch (err) {
-      message.error("Có lỗi xảy ra khi xóa sản phẩm.");
+      navigate("/login", { replace: true });
+      message.error(err.message);
     }
   };
 
-  // Tính tổng tiền
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  if (error) {
-    return <div className="text-red-500 text-center py-4">{`Đã xảy ra lỗi: ${error}`}</div>;
+  // Handle loading and error states
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-xl font-sans text-gray-500">Đang tải thông tin sản phẩm...</p>
+      </div>
+    );
   }
 
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-xl font-sans text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  const sliderLargeSettings = {
+    asNavFor: nav2,
+    ref: (slider) => setNav1(slider),
+    arrows: true,
+    prevArrow: <Arrow direction="left" />,
+    nextArrow: <Arrow direction="right" />,
+    beforeChange: (_, next) => setSelectedImageIndex(next),
+  };
+
+  const sliderSmallSettings = {
+    asNavFor: nav1,
+    ref: (slider) => setNav2(slider),
+    slidesToShow: 5,
+    swipeToSlide: true,
+    focusOnSelect: true,
+  };
+
   return (
-    <div className="container min-h-[400px] max-w-[960px] mx-auto py-8">
-      {cartItems.length === 0 ? (
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#283149] mb-6">Giỏ hàng của bạn</h1>
-          <p className="text-lg text-[#283149]">Giỏ hàng của bạn đang trống!</p>
-          <button
-            className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md"
-            onClick={() => navigate("/")}
-          >
-            Tiếp tục mua sắm
-          </button>
-        </div>
-      ) : (
-        <div>
-          <h1 className="text-2xl font-sans font-bold text-[#283149] mb-6">Giỏ hàng của bạn</h1>
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto border-collapse border border-gray-200">
-                <thead>
-                  <tr className="border-b">
-                    <th className="p-3 text-left text-[#283149]">Sản phẩm</th>
-                    <th className="p-3 text-left text-[#283149]">Giá</th>
-                    <th className="p-3 text-center text-[#283149]">Số lượng</th>
-                    <th className="p-3 text-center text-[#283149]">Tổng</th>
-                    <th className="p-3 text-left text-[#283149]">Xoá</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((product) => (
-                    <CartItem
-                      key={`${product.id}-${product.name}`}
-                      product={product}
-                      onRemove={handleRemove}
-                      onUpdateQuantity={handleUpdateQuantity}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-6 text-right">
-              <p className="text-lg font-sans font-bold mb-2 text-[#283149]">
-                Tổng cộng: {total.toLocaleString()}₫
-              </p>
-              <button
-                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                onClick={() => navigate("/checkout/info", { state: { cartItems } })}
-              >
-                Thanh toán
-              </button>
-            </div>
+    <div className="container mx-auto my-10 px-4 w-full max-w-7xl">
+      <div className="flex flex-col md:flex-row">
+        {/* Main Image Slider */}
+        <div className="md:w-1/2 p-4">
+          <Slider {...sliderLargeSettings}>
+            {product.images?.map((image, index) => (
+              <div key={index}>
+                <img
+                  src={image}
+                  alt={`Product image ${index + 1}`}
+                  className="w-full rounded-md"
+                />
+              </div>
+            ))}
+          </Slider>
+
+          {/* Thumbnail Slider */}
+          <div className="mt-4">
+            <Slider {...sliderSmallSettings}>
+              {product.images?.map((image, index) => (
+                <div key={index} className="px-2">
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className={`w-full h-full object-cover rounded-md transition-opacity ${selectedImageIndex === index ? "opacity-100" : "opacity-50"}`}
+                  />
+                </div>
+              ))}
+            </Slider>
           </div>
         </div>
-      )}
+
+        {/* Product Information */}
+        <div className="md:w-1/2 mx-10 p-4">
+          <h2 className="text-2xl font-bold">{product.name}</h2>
+          <p className="text-xl mt-6 text-red-600">{product.price.toLocaleString()} VND</p>
+
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold">Số lượng:</h3>
+            <div className="flex items-center mt-4 border-2 border-black w-fit rounded-md">
+              <button onClick={decreaseQuantity} className="px-4 py-2">-</button>
+              <span className="px-4 py-2">{quantity}</span>
+              <button onClick={increaseQuantity} className="px-4 py-2">+</button>
+            </div>
+          </div>
+
+          <button
+            onClick={addToCart}
+            className="mt-6 px-6 py-2 w-full bg-blue-500 text-white font-semibold rounded-md"
+          >
+            Thêm vào giỏ hàng
+          </button>
+
+          <p className="mt-4">{product.description}</p>
+        </div>
+      </div>
     </div>
   );
 }
