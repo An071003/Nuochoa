@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Table, Spin, Alert, Pagination, Button, Modal, Switch } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getProductList } from "../../../modules/Admin/Product/getProductList";
@@ -19,24 +19,25 @@ export default function ProductList() {
     const [editingProduct, setEditingProduct] = useState(null);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const data = await getProductList();
-                if (Array.isArray(data)) {
-                    setProducts(data);
-                } else {
-                    throw new Error("Invalid data format");
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await getProductList();
+            if (Array.isArray(data)) {
+                setProducts(data);
+            } else {
+                throw new Error("Invalid data format");
             }
-        };
-
-        fetchProducts();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -48,12 +49,9 @@ export default function ProductList() {
     const handleToggleFeatured = async (id) => {
         try {
             await toggleFeaturedProduct(id); 
-            const updatedProducts = await getProductList(); 
-            setProducts(updatedProducts);
+            await fetchProducts(); // Optimized to re-fetch
         } catch (error) {
             console.error("Error toggling featured product:", error.message);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -68,13 +66,9 @@ export default function ProductList() {
             onOk: async () => {
                 try {
                     await deleteProduct(id);
-                    setLoading(true);
-                    const updatedProducts = await getProductList();
-                    setProducts(updatedProducts);
+                    await fetchProducts(); // Re-fetch products after delete
                 } catch (error) {
                     console.error("Error deleting product:", error.message);
-                } finally {
-                    setLoading(false);
                 }
             },
         });
@@ -84,13 +78,9 @@ export default function ProductList() {
         try {
             await addProduct(values);
             setIsModalVisible(false);
-            setLoading(true);
-            const updatedProducts = await getProductList();
-            setProducts(updatedProducts);
+            await fetchProducts(); // Re-fetch after adding a new product
         } catch (error) {
             console.error("Error adding product:", error.message);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -119,12 +109,12 @@ export default function ProductList() {
             key: "category",
         },
         {
-            title: <span className="text-[#B76E79] font-bold">brand</span>,
+            title: <span className="text-[#B76E79] font-bold">Brand</span>,
             dataIndex: "brand",
             key: "brand",
-        }, 
+        },
         {
-            title: <span className="text-[#B76E79] font-bold">countInStock</span>,
+            title: <span className="text-[#B76E79] font-bold">Count In Stock</span>,
             dataIndex: "countInStock",
             key: "countInStock",
         },
@@ -164,24 +154,21 @@ export default function ProductList() {
         },
     ];
 
-    if (loading)
+    if (loading) {
         return (
             <div className="h-screen flex justify-center items-center bg-[#F5F5F5]">
-                <Spin tip="Loading products..." ><div/></Spin>
+                <Spin tip="Loading products..." />
             </div>
         );
-    if (error)
+    }
+
+    if (error) {
         return (
             <div className="h-screen flex justify-center items-center bg-[#F5F5F5]">
                 <Alert message="Error" description={error} type="error" showIcon />
             </div>
         );
-    if (!Array.isArray(products))
-        return (
-            <div className="h-screen flex justify-center items-center bg-[#F5F5F5]">
-                <Alert message="Error" description="Data is not valid" type="error" showIcon />
-            </div>
-        );
+    }
 
     return (
         <div className="h-full bg-[#F5F5F5] flex justify-center items-center">
@@ -196,24 +183,20 @@ export default function ProductList() {
                         Add Product
                     </Button>
                 </div>
-                <div className="flex-grow">
-                    <Table
-                        columns={columns}
-                        dataSource={paginatedData}
-                        rowKey="_id"
-                        bordered
-                        pagination={false}
-                    />
-                </div>
-                <div className="mt-4">
-                    <Pagination
-                        current={currentPage}
-                        pageSize={pageSize}
-                        total={products.length}
-                        onChange={(page) => setCurrentPage(page)}
-                        className="flex justify-center items-center"
-                    />
-                </div>
+                <Table
+                    columns={columns}
+                    dataSource={paginatedData}
+                    rowKey="_id"
+                    bordered
+                    pagination={false}
+                />
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={products.length}
+                    onChange={(page) => setCurrentPage(page)}
+                    className="flex justify-center items-center mt-4"
+                />
             </div>
 
             <AddProductModal
@@ -230,10 +213,7 @@ export default function ProductList() {
                 onSubmit={async (values) => {
                     await editProduct(editingProduct._id, values);
                     setIsEditModalVisible(false);
-                    setLoading(true);
-                    const updatedProducts = await getProductList();
-                    setProducts(updatedProducts);
-                    setLoading(false);
+                    await fetchProducts(); // Re-fetch after editing
                 }}
                 product={editingProduct}
             />
