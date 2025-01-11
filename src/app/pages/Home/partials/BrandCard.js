@@ -8,9 +8,12 @@ export default function BrandCard({ imageUrl }) {
       <img 
         src={imageUrl}
         alt="Brand Image"
-        className='w-36 h-36 object-cover'
+        className='w-36 h-36 object-cover rounded-md transition-transform duration-300 ease-in-out transform hover:scale-110'
       />
-      <Link to="/" className='flex items-center cursor-pointer transition-transform duration-200 hover:scale-105 hover:font-semibold'>
+      <Link 
+        to="/" 
+        className='flex items-center cursor-pointer transition-all duration-200 hover:font-semibold mt-2'
+      >
         Xem Thêm <IoIosArrowRoundForward />
       </Link>
     </div>
