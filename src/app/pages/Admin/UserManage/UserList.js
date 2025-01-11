@@ -42,7 +42,7 @@ export default function UserList() {
       title: <span className="text-[#B76E79] font-bold">Name</span>,
       dataIndex: "name",
       key: "name",
-      width: "30%", 
+      width: "30%",
     },
     {
       title: <span className="text-[#B76E79] font-bold">Email</span>,
@@ -91,25 +91,28 @@ export default function UserList() {
     );
 
   return (
-    <div className="h-full bg-[#F5F5F5] flex justify-center items-center">
+    <div className="h-full bg-[#F5F5F5] flex justify-center items-center px-4 sm:px-8">
       <div className="w-full min-h-[95%] max-w-5xl bg-[#FFF6E3] shadow-lg border border-[#B76E79] rounded-lg my-4 p-5 flex flex-col">
         <h1 className="text-2xl font-semibold text-[#B76E79] mb-5 text-center">User List</h1>
 
-        <div className="flex-grow">
+        <div className="flex-grow overflow-x-auto">
           <Table
             dataSource={paginatedData}
             columns={columns}
             rowKey="_id"
             bordered
             pagination={false}
+            scroll={{ x: 600 }} // Make table scrollable horizontally on small screens
           />
         </div>
+        
         <div className="mt-4 flex justify-center">
           <Pagination
             current={currentPage}
             pageSize={pageSize}
             total={users.length}
             onChange={(page) => setCurrentPage(page)}
+            className="mt-4"
           />
         </div>
       </div>
