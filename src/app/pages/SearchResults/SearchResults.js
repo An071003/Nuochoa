@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 export default function SearchResults() {
@@ -9,41 +9,33 @@ export default function SearchResults() {
   const [sortOption, setSortOption] = useState("relevance");
   const [filterOption, setFilterOption] = useState("all");
 
-  // Apply Sorting
-  const sortProducts = (option) => {
-    let sortedProducts = [...filteredProducts];
-    if (option === "relevance") {
-      // Keep the default sorting order
-      sortedProducts = [...filteredProducts];
-    } else if (option === "newest") {
-      sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else if (option === "price-low") {
-      sortedProducts.sort((a, b) => a.price - b.price);
-    } else if (option === "price-high") {
-      sortedProducts.sort((a, b) => b.price - a.price);
+  // Memoize the filtered and sorted products to optimize performance
+  const filteredAndSortedProducts = useMemo(() => {
+    let updatedProducts = [...products];
+
+    // Apply Filtering
+    if (filterOption === "featured") {
+      updatedProducts = updatedProducts.filter((product) => product.isFeatured);
+    } else if (filterOption === "inStock") {
+      updatedProducts = updatedProducts.filter((product) => product.countInStock > 0);
     }
-    setFilteredProducts(sortedProducts);
-  };
 
-  // Apply Filtering
-  const filterProducts = (option) => {
-    if (option === "all") {
-      setFilteredProducts(products);
-    } else if (option === "featured") {
-      setFilteredProducts(products.filter((product) => product.isFeatured));
-    } else if (option === "inStock") {
-      setFilteredProducts(products.filter((product) => product.countInStock > 0));
+    // Apply Sorting
+    if (sortOption === "newest") {
+      updatedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (sortOption === "price-low") {
+      updatedProducts.sort((a, b) => a.price - b.price);
+    } else if (sortOption === "price-high") {
+      updatedProducts.sort((a, b) => b.price - a.price);
     }
-  };
 
-  // Reapply sorting and filtering when the respective options change
-  useEffect(() => {
-    sortProducts(sortOption);
-  }, [sortOption]);
+    return updatedProducts;
+  }, [products, sortOption, filterOption]);
 
+  // Update the filtered products whenever the sorting/filtering options change
   useEffect(() => {
-    filterProducts(filterOption);
-  }, [filterOption]);
+    setFilteredProducts(filteredAndSortedProducts);
+  }, [filteredAndSortedProducts]);
 
   return (
     <div className="container min-h-[400px] max-w-[960px] mx-auto py-10">
