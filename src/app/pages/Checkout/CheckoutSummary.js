@@ -10,7 +10,7 @@ export default function CheckoutSummary({ cartItems, total }) {
           <li key={item.id} className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <img
-                src={item.image}
+                src={item.thumbnail}
                 alt={item.name}
                 className="w-12 h-12 object-cover rounded-md mr-4"
               />
