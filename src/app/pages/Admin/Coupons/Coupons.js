@@ -3,17 +3,17 @@ import { Table, Spin, Alert, Pagination } from "antd";
 import { getCouponList } from "../../../modules/Admin/Coupon/getCouponList";
 
 export default function CouponList() {
-  const [coupons, setCoupons] = useState([]); // Đảm bảo khởi tạo là mảng rỗng
+  const [coupons, setCoupons] = useState([]); // Ensure initialized as an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10; // Số mục trên mỗi trang
+  const pageSize = 10; // Number of items per page
 
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
         const data = await getCouponList();
-        setCoupons(data || []); // Đảm bảo luôn là mảng
+        setCoupons(data || []); // Ensure it's always an array
       } catch (err) {
         setError(err.message);
       } finally {
@@ -69,10 +69,16 @@ export default function CouponList() {
 
   return (
     <div className="h-full bg-[#F5F5F5] flex justify-center items-center">
-      <div className="w-full min-h-[95%] max-w-5xl bg-[#FFF6E3] shadow-lg border border-[#B76E79] rounded-lg my-4 p-5 flex flex-col">
+      <div className="w-full min-h-[95%] max-w-full md:max-w-5xl bg-[#FFF6E3] shadow-lg border border-[#B76E79] rounded-lg my-4 p-5 flex flex-col">
         <h1 className="text-2xl font-semibold text-[#B76E79]">Coupon List</h1>
         <div className="flex-grow">
-          <Table dataSource={paginatedData} columns={columns} rowKey="_id" pagination={false} />
+          <Table
+            dataSource={paginatedData}
+            columns={columns}
+            rowKey="_id"
+            pagination={false}
+            scroll={{ x: 1000 }} // Allows horizontal scrolling for wider tables on smaller screens
+          />
         </div>
         <div className="mt-4 flex justify-center items-end">
           <Pagination
@@ -80,6 +86,8 @@ export default function CouponList() {
             pageSize={pageSize}
             total={coupons.length}
             onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false} // Hides size changer for better mobile UX
+            responsive // Enables responsive pagination
           />
         </div>
       </div>

@@ -1,12 +1,21 @@
+/* Custom width for the dropdown menu */
 .custom-dropdown .ant-dropdown-menu {
-    min-width: 150px;
+    min-width: 150px; /* Ensures the dropdown is at least 150px wide */
 }
-  
+
+/* Custom padding for menu items */
 .custom-dropdown .ant-dropdown-menu-item {
-    padding: 8px 16px;
+    padding: 8px 16px; /* Adds space inside each item */
 }
-  
+
+/* Hover effect for menu items */
 .custom-dropdown .ant-dropdown-menu-item:hover {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* Light grey background on hover */
+    color: #333; /* Dark text on hover for better visibility */
+    cursor: pointer; /* Change cursor to pointer when hovering */
 }
-  
+
+/* Optional: Customize the dropdown arrow if needed */
+.custom-dropdown .ant-dropdown-arrow {
+    color: #333; /* Color of the dropdown arrow */
+}

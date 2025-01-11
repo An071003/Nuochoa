@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaBoxOpen, FaTags, FaUsers, FaShoppingCart } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
@@ -7,6 +7,7 @@ import logoutAcc from "../../modules/Logout/logoutAcc";
 export default function SidebarAdmin() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const isActive = (path) => location.pathname === path;
 
@@ -24,7 +25,15 @@ export default function SidebarAdmin() {
   };
 
   return (
-    <div className="flex flex-col fixed top-0 left-0 bottom-0 w-64 bg-[#2C2C2C] text-[#FFF6E3] z-50">
+    <div className={`flex flex-col fixed top-0 left-0 bottom-0 w-64 bg-[#2C2C2C] text-[#FFF6E3] z-50 transition-all duration-300 ${isSidebarOpen ? 'block' : 'hidden lg:block'}`}>
+      {/* Sidebar Toggle Button */}
+      <button
+        className="lg:hidden text-white p-2 absolute top-5 right-0"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? 'Close' : 'Open'} Sidebar
+      </button>
+
       <div
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="mb-5 border bg-[#FFF6E3] h-16 flex items-center cursor-pointer"
@@ -33,6 +42,7 @@ export default function SidebarAdmin() {
       </div>
 
       <ul className="flex-grow">
+        {/* Dashboard */}
         <li
           onClick={() => handleClick("/admin/dashboard")}
           className={`flex items-center pl-5 w-full mt-4 h-12 cursor-pointer hover:text-[#FFF6E3] hover:border-r-4 hover:border-[#FFF6E3] ${
@@ -40,12 +50,12 @@ export default function SidebarAdmin() {
           }`}
         >
           <FaTachometerAlt
-            className={`mr-2 ${
-              isActive("/admin/dashboard") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"
-            }`}
+            className={`mr-2 ${isActive("/admin/dashboard") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"}`}
           />
           <p>Dashboard</p>
         </li>
+
+        {/* Product */}
         <li
           onClick={() => handleClick("/admin/product")}
           className={`flex items-center pl-5 w-full mt-4 h-12 cursor-pointer hover:text-[#FFF6E3] hover:border-r-4 hover:border-[#FFF6E3] ${
@@ -53,12 +63,12 @@ export default function SidebarAdmin() {
           }`}
         >
           <FaBoxOpen
-            className={`mr-2 ${
-              isActive("/admin/product") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"
-            }`}
+            className={`mr-2 ${isActive("/admin/product") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"}`}
           />
           <p>Product</p>
         </li>
+
+        {/* Coupons */}
         <li
           onClick={() => handleClick("/admin/coupons")}
           className={`flex items-center pl-5 w-full mt-4 h-12 cursor-pointer hover:text-[#FFF6E3] hover:border-r-4 hover:border-[#FFF6E3] ${
@@ -66,12 +76,12 @@ export default function SidebarAdmin() {
           }`}
         >
           <FaTags
-            className={`mr-2 ${
-              isActive("/admin/coupons") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"
-            }`}
+            className={`mr-2 ${isActive("/admin/coupons") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"}`}
           />
           <p>Coupons</p>
         </li>
+
+        {/* Users */}
         <li
           onClick={() => handleClick("/admin/user")}
           className={`flex items-center pl-5 w-full mt-4 h-12 cursor-pointer hover:text-[#FFF6E3] hover:border-r-4 hover:border-[#FFF6E3] ${
@@ -79,12 +89,12 @@ export default function SidebarAdmin() {
           }`}
         >
           <FaUsers
-            className={`mr-2 ${
-              isActive("/admin/user") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"
-            }`}
+            className={`mr-2 ${isActive("/admin/user") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"}`}
           />
           <p>Users</p>
         </li>
+
+        {/* Orders */}
         <li
           onClick={() => handleClick("/admin/order")}
           className={`flex items-center pl-5 w-full mt-4 h-12 cursor-pointer hover:text-[#FFF6E3] hover:border-r-4 hover:border-[#FFF6E3] ${
@@ -92,14 +102,13 @@ export default function SidebarAdmin() {
           }`}
         >
           <FaShoppingCart
-            className={`mr-2 ${
-              isActive("/admin/order") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"
-            }`}
+            className={`mr-2 ${isActive("/admin/order") ? "text-[#B76E79]" : "text-[#D4D4D4] hover:text-[#FFF6E3]"}`}
           />
           <p>Orders</p>
         </li>
       </ul>
 
+      {/* Logout */}
       <div
         onClick={handleLogout}
         className="flex items-center pl-5 w-full h-12 mb-6 cursor-pointer hover:text-rose-500 hover:border-r-4 hover:border-rose-500 text-[#D4D4D4]"

@@ -1,3 +1,20 @@
+.slick-dots {
+  position: absolute;
+  bottom: -40px; /* Di chuyển các dots xuống dưới */
+  left: -50px;
+  right: 0;
+  display: flex;
+  justify-content: flex-start; /* Canh các thumbnail về phía trái */
+}
+
+.slick-dots li {
+  list-style-type: none; /* Loại bỏ dấu chấm trong li */
+  margin: 0; /* Xóa margin mặc định */
+}
+
+
+  
+  
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

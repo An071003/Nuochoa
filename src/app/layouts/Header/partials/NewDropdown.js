@@ -9,8 +9,8 @@ const NewDropdown = ({ menuItems, triggerElement }) => {
         items: menuItems,
       }}
       trigger={["hover"]}
-      placement="bottomRight" 
-      overlayClassName="custom-dropdown" 
+      placement="bottomRight"
+      overlayClassName="custom-dropdown"
     >
       <div className="popup">
         {triggerElement}
