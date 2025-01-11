@@ -1,7 +1,8 @@
-import { message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {API_URL} from "../../../config/webpack.config"
+import Slider from "react-slick";
+import { message } from "antd";
+import { API_URL } from "../../../config/webpack.config";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -25,17 +26,14 @@ export default function ProductDetail() {
         if (!response.ok) {
           throw new Error("Failed to fetch product details");
         }
-
         const data = await response.json();
         setProduct(data);
-
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProduct();
   }, [id]);
 
@@ -45,16 +43,13 @@ export default function ProductDetail() {
   const addToCart = async () => {
     try {
       const cookie = await fetch(`${API_URL}/api/auth/verify-token`, {
-        method: "GET", 
-        credentials: "include", 
+        method: "GET",
+        credentials: "include",
       });
 
       if (!cookie.ok) {
         throw new Error("Token không hợp lệ hoặc đã hết hạn.");
       }
-      console.log(cookie)
-      const data = await cookie.json();
-      console.log("Xác thực thành công:", data);
 
       const response = await fetch(`${API_URL}/api/cart`, {
         method: "POST",
@@ -63,7 +58,7 @@ export default function ProductDetail() {
         },
         body: JSON.stringify({
           productId: id,
-          quantity: quantity
+          quantity,
         }),
         credentials: "include",
       });
@@ -72,9 +67,9 @@ export default function ProductDetail() {
         throw new Error("Không thể thêm sản phẩm vào giỏ hàng");
       }
 
-      const cartData = await response.json();
-      message.success(`Đã thêm ${quantity} sản phẩm ${product.name} (${selectedSize}) vào giỏ hàng!`);
-      console.log("Giỏ hàng sau khi thêm sản phẩm:", cartData);
+      message.success(
+        `Đã thêm ${quantity} sản phẩm ${product.name} (${selectedSize}) vào giỏ hàng!`
+      );
     } catch (err) {
       navigate("/login", { replace: true });
       message.error(err.message);
@@ -97,15 +92,29 @@ export default function ProductDetail() {
     );
   }
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <div className="container mx-36 my-10 px-4 w-[70%] min-h-[600px]">
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/2">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-[400px] h-[500px] object-cover"
-          />
+        <div className="md:w-1/2 p-4">
+          <Slider {...sliderSettings}>
+            {product.images?.map((image, index) => (
+              <div key={index}>
+                <img
+                  src={image}
+                  alt={`Product image ${index + 1}`}
+                  className="w-full rounded-md"
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
 
         <div className="md:w-1/2 p-4">
@@ -117,8 +126,9 @@ export default function ProductDetail() {
               {["Full 100ml", "Chiết 10ml", "Chiết 5ml"].map((size) => (
                 <div
                   key={size}
-                  className={`cursor-pointer px-4 py-2 border rounded-md text-center ${selectedSize === size ? "bg-blue-500 text-white" : "bg-gray-100"
-                    }`}
+                  className={`cursor-pointer px-4 py-2 border rounded-md text-center ${
+                    selectedSize === size ? "bg-blue-500 text-white" : "bg-gray-100"
+                  }`}
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
