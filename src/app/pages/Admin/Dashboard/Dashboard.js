@@ -69,7 +69,7 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold text-[#B76E79] mb-6">Dashboard</h1>
 
       {/* Cards Section */}
-      <div className="grid grid-cols-4 gap-4 mb-6 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 w-full">
         <div className="bg-white shadow-md p-5 rounded-lg text-center">
           <FaUsers className="text-purple-500 text-4xl mb-3 mx-auto" />
           <h2 className="text-lg font-semibold text-gray-700">Users</h2>
