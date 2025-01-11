@@ -23,11 +23,11 @@ export default function ProductCard({ product }) {
       >
         {/* Hình ảnh sản phẩm */}
         <div className="relative">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-44 h-48 object-cover mt-4"
-          />
+        <img
+          src={product.thumbnail || "path/to/placeholder-image.jpg"}
+          alt={product.name}
+          className="w-44 h-48 object-cover mt-4"
+        />
           {/* Hiển thị "Tạm hết hàng" nếu sản phẩm hết hàng */}
           {!(product.countInStock > 0) && (
             <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
