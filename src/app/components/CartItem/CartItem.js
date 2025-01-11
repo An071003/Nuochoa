@@ -4,6 +4,8 @@ import ConfirmPopup from "../../components/confirmpopup";
 
 export default function CartItem({ product, onRemove, onUpdateQuantity }) {
   const [showPopup, setShowPopup] = useState(false);
+  
+  // Hàm xác nhận xóa sản phẩm
   const handleConfirmDelete = (confirm) => {
     if (confirm) {
       onRemove(product._idCartItem);
@@ -11,6 +13,7 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }) {
     setShowPopup(false);
   };
 
+  // Cập nhật số lượng sản phẩm
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity < 1) return;
     try {
@@ -24,8 +27,9 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }) {
     <>
       <tr className="border-b">
         <td className="p-2 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap flex items-center">
+          {/* Hình ảnh sản phẩm sử dụng thumbnail */}
           <img
-            src={product.image}
+            src={product.thumbnail}
             alt={product.name}
             className="w-12 h-12 mr-4"
           />
