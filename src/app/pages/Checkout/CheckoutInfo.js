@@ -3,23 +3,44 @@ import CheckoutSummary from "./CheckoutSummary";
 import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumb from "./partials/Breadcrumb";
 
-export default function CheckoutInfo() {
+const CheckoutInfo = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const initialCartItems = JSON.parse(localStorage.getItem("cartItems")) || location.state?.cartItems || [];
-    const initialFormData = JSON.parse(localStorage.getItem("formData")) || {
-        email: "",
-        firstName: "",
-        lastName: "",
-        address: "",
-        city: "",
-        postalCode: "",
-        phone: "",
+    const getCartItemsFromStorage = () => {
+        try {
+            return JSON.parse(localStorage.getItem("cartItems")) || location.state?.cartItems || [];
+        } catch (error) {
+            return [];
+        }
     };
 
-    const [cartItems, setCartItems] = useState(initialCartItems);
-    const [formData, setFormData] = useState(initialFormData);
+    const getFormDataFromStorage = () => {
+        try {
+            return JSON.parse(localStorage.getItem("formData")) || {
+                email: "",
+                firstName: "",
+                lastName: "",
+                address: "",
+                city: "",
+                postalCode: "",
+                phone: "",
+            };
+        } catch (error) {
+            return {
+                email: "",
+                firstName: "",
+                lastName: "",
+                address: "",
+                city: "",
+                postalCode: "",
+                phone: "",
+            };
+        }
+    };
+
+    const [cartItems, setCartItems] = useState(getCartItemsFromStorage);
+    const [formData, setFormData] = useState(getFormDataFromStorage);
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -27,17 +48,9 @@ export default function CheckoutInfo() {
         localStorage.setItem("formData", JSON.stringify(formData));
     }, [cartItems, formData]);
 
-    const total = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
+    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        setErrors({ ...errors, [e.target.name]: "" });
-    };
-
-    const handleNextStep = () => {
+    const validateForm = () => {
         const { email, firstName, lastName, address, city, phone } = formData;
         const newErrors = {};
 
@@ -48,11 +61,20 @@ export default function CheckoutInfo() {
         if (!city) newErrors.city = "Vui lòng nhập thành phố.";
         if (!phone) newErrors.phone = "Vui lòng nhập số điện thoại.";
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        return newErrors;
+    };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrors((prevErrors) => ({ ...prevErrors, [e.target.name]: "" }));
+    };
+
+    const handleNextStep = () => {
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
-
         navigate("/checkout/payment", { state: { cartItems, formData } });
     };
 
@@ -75,153 +97,76 @@ export default function CheckoutInfo() {
                 <div className="mb-6">
                     <h2 className="text-lg font-bold mb-2">Liên hệ</h2>
                     <div>
-                        <div className="relative">
-                            <input
-                                id="ip-email"
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.email ? "border-red-500" : "border-gray-300"}`}
-                                placeholder="Email"
-                            />
-                            <label
-                                htmlFor="ip-email"
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                            >
-                                Email
-                            </label>
-                        </div>
-                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        <InputField
+                            id="ip-email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            label="Email"
+                            error={errors.email}
+                        />
                     </div>
                 </div>
                 <div className="mb-4">
                     <h2 className="text-lg font-bold mb-2">Địa chỉ giao hàng</h2>
                     <div className="grid grid-cols-2 gap-3">
-                        <div>
-                            <div className="relative">
-                                <input
-                                    id="ip-first-name"
-                                    type="text"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.firstName ? "border-red-500" : "border-gray-300"}`}
-                                    placeholder="Tên"
-                                />
-                                <label
-                                    htmlFor="ip-first-name"
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                                >
-                                    Tên
-                                </label>
-                            </div>
-                            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-                        </div>
-                        <div>
-                            <div className="relative">
-                                <input
-                                    id="ip-last-name"
-                                    type="text"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.lastName ? "border-red-500" : "border-gray-300"}`}
-                                    placeholder="Họ"
-                                />
-                                <label
-                                    htmlFor="ip-last-name"
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                                >
-                                    Họ
-                                </label>
-                            </div>
-                            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-                        </div>
+                        <InputField
+                            id="ip-first-name"
+                            type="text"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            label="Tên"
+                            error={errors.firstName}
+                        />
+                        <InputField
+                            id="ip-last-name"
+                            type="text"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            label="Họ"
+                            error={errors.lastName}
+                        />
                     </div>
-                    <div>
-                        <div className="relative mt-3">
-                            <input
-                                id="ip-address"
-                                type="text"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.address ? "border-red-500" : "border-gray-300"}`}
-                                placeholder="Địa chỉ"
-                            />
-                            <label
-                                htmlFor="ip-address"
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                            >
-                                Địa chỉ
-                            </label>
-                        </div>
-                        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                    </div>
+                    <InputField
+                        id="ip-address"
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        label="Địa chỉ"
+                        error={errors.address}
+                    />
                     <div className="grid grid-cols-2 gap-3 mt-3">
-                        <div>
-                            <div className="relative">
-                                <input
-                                    id="ip-city"
-                                    type="text"
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.city ? "border-red-500" : "border-gray-300"}`}
-                                    placeholder=" "
-                                />
-                                <label
-                                    htmlFor="ip-city"
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                                >
-                                    Thành phố
-                                </label>
-                            </div>
-                            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-                        </div>
-                        <div>
-                            <div className="relative">
-                                <input
-                                    id="ip-postal-code"
-                                    type="text"
-                                    name="postalCode"
-                                    value={formData.postalCode}
-                                    onChange={handleChange}
-                                    className="peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Mã bưu chính (không bắt buộc)"
-                                />
-                                <label
-                                    htmlFor="ip-postal-code"
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                                >
-                                    Mã bưu chính (không bắt buộc)
-                                </label>
-                            </div>
-                        </div>
+                        <InputField
+                            id="ip-city"
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleChange}
+                            label="Thành phố"
+                            error={errors.city}
+                        />
+                        <InputField
+                            id="ip-postal-code"
+                            type="text"
+                            name="postalCode"
+                            value={formData.postalCode}
+                            onChange={handleChange}
+                            label="Mã bưu chính (không bắt buộc)"
+                        />
                     </div>
-                    <div>
-                        <div className="relative mt-3">
-                            <input
-                                id="ip-phone"
-                                type="text"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? "border-red-500" : "border-gray-300"}`}
-                                placeholder="Số điện thoại"
-                            />
-                            <label
-                                htmlFor="ip-phone"
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-[10px]"
-                            >
-                                Số điện thoại
-                            </label>
-
-
-                        </div>
-                        {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-                    </div>
+                    <InputField
+                        id="ip-phone"
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        label="Số điện thoại"
+                        error={errors.phone}
+                    />
                 </div>
                 <div className="flex justify-between">
                     <div className="pt-1 text-left">
@@ -245,4 +190,28 @@ export default function CheckoutInfo() {
             <CheckoutSummary cartItems={cartItems} shippingCost={0} total={total} />
         </div>
     );
-}
+};
+
+// Reusable Input Field component for simplicity
+const InputField = ({ id, type, name, value, onChange, label, error }) => (
+    <div className="relative mb-4">
+        <input
+            id={id}
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            className={`peer block w-full border rounded-md px-3 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${error ? "border-red-500" : "border-gray-300"}`}
+            placeholder={label}
+        />
+        <label
+            htmlFor={id}
+            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-neutral-50 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4"
+        >
+            {label}
+        </label>
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+);
+
+export default CheckoutInfo;
