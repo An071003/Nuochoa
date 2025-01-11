@@ -15,7 +15,7 @@ export default function Brand() {
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 px-2 sm:px-8 lg:px-16 pb-4 lg:mx-28 md:mx-20 sm:mx-16 ">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 px-2 sm:px-8 lg:px-16 pb-4 lg:mx-28 md:mx-20 sm:mx-16">
       {brandImages.map((image, index) => (
         <div key={index}>
           <BrandCard imageUrl={image} />
